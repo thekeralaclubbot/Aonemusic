@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A One Music</title>
+    <link rel="icon" href="logo.jpg" type="image/jpeg">
+
+    <style>
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f9; 
+            padding-top: 120px; 
+            color: #333;
+        }
+
+        /* --- Fixed Search Bar & Header --- */
+        .search-bar-fixed-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            padding: 10px 20px;
+        }
+
+        .header-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .app-title-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .app-logo {
+            width: 30px; 
+            height: 30px;
+            margin-right: 10px;
+            border-radius: 50%;
+            background-color: #ccc; 
+        }
+
+        h1 {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #007bff; 
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 5px 10px;
+            background-color: #fff;
+        }
+
+        #songSearch {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            font-size: 1em;
+            padding: 5px;
+            background: none;
+        }
+
+        .search-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            padding-left: 10px;
+            color: #777;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Ad Section (Carousel Styling) --- */
+        .ad-container {
+            height: 150px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden; 
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .ad-slider {
+            display: flex;
+            width: 600%; 
+            height: 100%;
+            transition: transform 0.5s ease-in-out; 
+        }
+
+        .ad-image {
+            width: calc(100% / 6); 
+            height: 100%;
+            object-fit: cover;
+            background-color: #e0e0e0; 
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: #999;
+        }
+
+        .ad-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+        }
+
+        .dot {
+            height: 8px;
+            width: 8px;
+            background-color: #bbb;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background-color: #333;
+        }
+
+        /* --- Song List --- */
+        .song-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; 
+        }
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            background-color: white; 
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        }
+
+        .song-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            margin-right: 15px;
+            background-color: #ccc; 
+        }
+
+        .song-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .song-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sponsor-name {
+            font-size: 0.85em;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Updated button styles for consistency */
+        .action-button {
+            text-decoration: none; 
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 5px;
+            margin-left: 10px;
+            color: #007bff; 
+            line-height: 1; /* Helps vertically align the icon */
+        }
+        
+        .download-button {
+            /* Ensures download button stays as an anchor for file download */
+            display: inline-block; 
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            padding-bottom: 20px;
+            font-size: 0.8em;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="audioPlayer" src=""></audio>
+
+    <div class="search-bar-fixed-container">
+        <div class="header-content">
+            <div class="app-title-container">
+                <img src="logo.jpg" alt="A One Music Logo" class="app-logo">
+                <h1>A One Music</h1>
+            </div>
+            <div class="search-box">
+                <input type="text" id="songSearch" placeholder="Search Songs....">
+                <button class="search-icon">🔍</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="ad-container">
+            <div class="ad-slider" id="adSlider">
+                <img src="ad1.jpg" alt="Advertisement 1" class="ad-image">
+                <img src="ad2.jpg" alt="Advertisement 2" class="ad-image">
+                <img src="ad3.jpg" alt="Advertisement 3" class="ad-image">
+                <img src="ad4.jpg" alt="Advertisement 4" class="ad-image">
+                <img src="ad5.jpg" alt="Advertisement 5" class="ad-image">
+                <img src="ad6.jpg" alt="Advertisement 6" class="ad-image">
+            </div>
+            <div class="ad-indicators" id="adIndicators">
+            </div>
+        </div>
+
+        <div class="song-list" id="songList">
+            
+            <div class="song-item">
+                <img src="nera.jpg" alt="Song Logo" class="song-logo">
+                <div class="song-info">
+                    <span class="song-name">nera</span>
+                    <span class="sponsor-name">Sponsore: Arjn X Kds X Ronn</span>
+                </div>
+                <button class="action-button play-button" data-src="Nera.mp3">▶</button>
+                <a href="Nera.mp3" download class="action-button download-button">⬇</a>
+            </div>
+
+            <div class="song-item">
+                <img src="shariya.jpg" alt="Song Logo" class="song-logo">
+                <div class="song-info">
+                    <span class="song-name">shariya</span>
+                    <span class="sponsor-name">Sponsore: Arjn X Kds X Ronn</span>
+                </div>
+                <button class="action-button play-button" data-src="Shariya.mp3">▶</button>
+                <a href="Shariya.mp3" download class="action-button download-button">⬇</a>
+            </div>
+
+            <div class="song-item">
+                <img src="salam.jpg" alt="Song Logo" class="song-logo">
+                <div class="song-info">
+                    <span class="song-name">salam</span>
+                    <span class="sponsor-name">Sponsore: A One Music</span>
+                </div>
+                <button class="action-button play-button" data-src="Salam.mp3">▶</button>
+                <a href="Salam.mp3" download class="action-button download-button">⬇</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        made by RISHADM004
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- GLOBAL AUDIO CONTROL ---
+            const audioPlayer = document.getElementById('audioPlayer');
+            const playButtons = document.querySelectorAll('.play-button');
+            let currentlyPlayingButton = null;
+
+            function playSong(button) {
+                const songSrc = button.getAttribute('data-src');
+
+                if (audioPlayer.paused) {
+                    // Scenario 1: Audio is paused, or a new song is being selected
+                    
+                    if (audioPlayer.src.includes(songSrc) && audioPlayer.currentTime > 0) {
+                        // If it's the same song, resume playing
+                        audioPlayer.play();
+                        button.textContent = '⏸'; // Change icon to pause
+                        currentlyPlayingButton = button;
+                    } else {
+                        // If it's a new song, load and play it
+                        audioPlayer.src = songSrc;
+                        audioPlayer.play();
+
+                        // Reset the previous button's icon if a different song was playing/paused
+                        if (currentlyPlayingButton && currentlyPlayingButton !== button) {
+                            currentlyPlayingButton.textContent = '▶';
+                        }
+                        
+                        button.textContent = '⏸'; // Change icon to pause
+                        currentlyPlayingButton = button;
+                    }
+                    
+                } else {
+                    // Scenario 2: Audio is currently playing
+
+                    if (audioPlayer.src.includes(songSrc)) {
+                        // If it's the currently playing song, pause it
+                        audioPlayer.pause();
+                        button.textContent = '▶'; // Change icon to play
+                        
+                    } else {
+                        // If a different song is playing, stop the current one and start the new one
+                        audioPlayer.pause(); // Pause old song
+                        audioPlayer.src = songSrc; // Load new song
+                        audioPlayer.play(); // Play new song
+
+                        // Reset the old button's icon
+                        if (currentlyPlayingButton) {
+                            currentlyPlayingButton.textContent = '▶';
+                        }
+                        
+                        button.textContent = '⏸'; // Change icon to pause
+                        currentlyPlayingButton = button;
+                    }
+                }
+            }
+
+            // Attach the playSong function to all play buttons
+            playButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    playSong(this);
+                });
+            });
+
+            // Reset the play button icon when the song finishes
+            audioPlayer.addEventListener('ended', function() {
+                if (currentlyPlayingButton) {
+                    currentlyPlayingButton.textContent = '▶';
+                    currentlyPlayingButton = null;
+                }
+            });
+
+
+            // --- CAROUSEL SCRIPT (Same as before) ---
+            const slider = document.getElementById('adSlider');
+            const indicatorContainer = document.getElementById('adIndicators');
+            const adImages = document.querySelectorAll('.ad-image');
+            let currentIndex = 0;
+            const totalImages = adImages.length;
+            const intervalTime = 3000;
+
+            for (let i = 0; i < totalImages; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                dot.dataset.index = i;
+                indicatorContainer.appendChild(dot);
+            }
+            const dots = document.querySelectorAll('.dot');
+
+            function updateSlider() {
+                const translateValue = -currentIndex * (100 / totalImages);
+                slider.style.transform = `translateX(${translateValue}%)`;
+                
+                dots.forEach((dot, index) => {
+                    dot.classList.remove('active');
+                    if (index === currentIndex) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % totalImages;
+                updateSlider();
+            }
+
+            updateSlider();
+            setInterval(nextSlide, intervalTime);
+            
+            dots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    currentIndex = parseInt(this.dataset.index);
+                    updateSlider();
+                });
+            });
+
+            // --- SEARCH FILTER SCRIPT (Same as before) ---
+            const searchInput = document.getElementById('songSearch');
+            const songItems = document.querySelectorAll('.song-item');
+
+            searchInput.addEventListener('keyup', function() {
+                const filter = searchInput.value.toUpperCase();
+
+                songItems.forEach(item => {
+                    const songName = item.querySelector('.song-name').textContent.toUpperCase();
+                    const sponsorName = item.querySelector('.sponsor-name').textContent.toUpperCase();
+
+                    if (songName.includes(filter) || sponsorName.includes(filter)) {
+                        item.style.display = 'flex'; 
+                    } else {
+                        item.style.display = 'none'; 
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
