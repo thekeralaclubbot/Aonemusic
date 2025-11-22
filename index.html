@@ -16,15 +16,13 @@
 
         body {
             font-family: sans-serif;
-            
             /* --- BACKGROUND IMAGE SETTINGS --- */
-            background-image: url('logo1.jpg,Nera.jpg'); 
-            background-size: cover;          
-            background-position: center;     
-            background-attachment: fixed;    
-            background-repeat: no-repeat;    
-            background-color: #f4f4f9;       
-            
+            background-image: url('bd.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: #f4f4f9;
             padding-top: 120px; 
             color: #333;
         }
@@ -49,9 +47,15 @@
         .app-title-container {
             display: flex;
             align-items: center;
+            justify-content: space-between; /* Pushes upload button to the right */
             margin-bottom: 10px;
             border-bottom: 1px solid #eee;
             padding-bottom: 5px;
+        }
+        
+        .title-left {
+            display: flex;
+            align-items: center;
         }
 
         .app-logo {
@@ -66,6 +70,23 @@
             font-size: 1.5em;
             font-weight: bold;
             color: #007bff; 
+        }
+
+        /* --- UPLOAD BUTTON STYLE --- */
+        .upload-btn-header {
+            background-color: #28a745; /* Green color */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .upload-btn-header:hover {
+            background-color: #218838;
         }
 
         .search-box {
@@ -175,56 +196,22 @@
             border-radius: 8px;
             margin-right: 15px;
             background-color: #ccc; 
+            object-fit: cover;
         }
 
-        /* Song info container needs relative positioning for absolute child */
         .song-info {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Masks the scrolling text */
-            position: relative;
-            justify-content: center;
-            height: 50px; /* Ensure height matches logo for alignment */
-        }
-
-        .song-name-container {
-            width: 100%;
             overflow: hidden;
-            white-space: nowrap;
         }
 
         .song-name {
             font-weight: bold;
             font-size: 1.1em;
             white-space: nowrap;
-            display: inline-block;
-            transition: color 0.3s ease;
-            
-            /* Default state (not playing): truncate with ellipsis */
-            width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        /* --- ANIMATION WHEN PLAYING --- */
-        
-        /* When 'scrolling-active' is added, change styles to allow scrolling */
-        .song-name.scrolling-active {
-            width: auto; /* Allow full width */
-            overflow: visible;
-            text-overflow: clip;
-            color: #ff4500; /* Change color to Orange/Red */
-            font-size: 1.3em; /* Slightly bigger */
-            
-            /* The Animation */
-            animation: marquee 10s linear infinite;
-            padding-left: 100%; /* Start off-screen right */
-        }
-
-        @keyframes marquee {
-            0%   { transform: translate(0, 0); }
-            100% { transform: translate(-100%, 0); }
         }
 
         .sponsor-name {
@@ -233,7 +220,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            margin-top: 2px;
         }
 
         .action-button {
@@ -252,6 +238,86 @@
             display: inline-block; 
         }
 
+        /* --- MODAL (POPUP) STYLES --- */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; 
+            z-index: 200; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%; 
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {transform: translateY(-50px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"], 
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .submit-upload-btn {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .submit-upload-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* --- FOOTER --- */
         .footer-note {
             text-align: center;
             margin-top: 30px;
@@ -265,7 +331,7 @@
             width: 40px;
             height: 40px;
             align-items: center;
-            }
+        }
         
         .footer-id {
             text-align: center;
@@ -273,7 +339,7 @@
             padding-bottom: 20px;
             font-size: 0.8em;
             color: #999;
-            }
+        }
     </style>
 </head>
 <body>
@@ -283,13 +349,36 @@
     <div class="search-bar-fixed-container">
         <div class="header-content">
             <div class="app-title-container">
-                <img src="logo1.jpg" alt="A One Music Logo" class="app-logo">
-                <h1>A One Music</h1>
+                <div class="title-left">
+                    <img src="logo1.jpg" alt="A One Music Logo" class="app-logo">
+                    <h1>A One Music</h1>
+                </div>
+                <button id="openUploadModal" class="upload-btn-header">⬆ Upload Song</button>
             </div>
             <div class="search-box">
                 <input type="text" id="songSearch" placeholder="Search Songs....">
                 <button class="search-icon">🔍</button>
             </div>
+        </div>
+    </div>
+
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 style="margin-bottom: 20px; color: #007bff;">Upload Your Song</h2>
+            
+            <div class="form-group">
+                <label for="uploadName">Song Name:</label>
+                <input type="text" id="uploadName" placeholder="Enter song title...">
+            </div>
+
+            <div class="form-group">
+                <label for="uploadFile">Select Audio File:</label>
+                <input type="file" id="uploadFile" accept="audio/*">
+            </div>
+
+            <button id="submitUpload" class="submit-upload-btn">Submit Song</button>
+            <p id="uploadStatus" style="margin-top: 10px; text-align: center; font-size: 0.9em;"></p>
         </div>
     </div>
 
@@ -303,19 +392,15 @@
                 <img src="ad5.jpg" alt="Advertisement 5" class="ad-image">
                 <img src="ad6.jpg" alt="Advertisement 6" class="ad-image">
             </div>
-            <div class="ad-indicators" id="adIndicators">
-            </div>
+            <div class="ad-indicators" id="adIndicators"></div>
         </div>
         
-
         <div class="song-list" id="songList">
             <div class="song-item">
                 <img src="mhr.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <div class="song-name-container">
-                        <span class="song-name">MHR Muntirichar</span>
-                    </div>
-                    <span class="sponsor-name">80M views | 10M ⬇️</span>
+                    <span class="song-name">MHR Muntirichar</span>
+                    <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="mhr_munthirichar.mp3">▶</button>
                 <a href="mhr_munthirichar.mp3" download class="action-button download-button">⬇️</a>
@@ -323,218 +408,19 @@
             <div class="song-item">
                 <img src="nera.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Nera</span>
-                    </div>
-                    <span class="sponsor-name">1M views | 500k ⬇️</span>
+                    <span class="song-name">Nera</span>
+                    <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="Nera.mp3">▶</button>
                 <a href="Nera.mp3" download class="action-button download-button">⬇️</a>
             </div>
-            <div class="song-item">
-                <img src="shariya.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Shariya</span>
-                    </div>
-                    <span class="sponsor-name">100k views | 50k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="Shariya.mp3">▶</button>
-                <a href="Shariya.mp3" download class="action-button download-button">⬇️</a>
             </div>
-
-
-            
-
-            <div class="song-item">
-                <img src="salam.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Salam</span>
-                    </div>
-                    <span class="sponsor-name">220k views | 25k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="Salam.mp3">▶</button>
-                <a href="Salam.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="hope.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Hope song</span>
-                    </div>
-                    <span class="sponsor-name">500k views | 100k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="hope_song.mp3">▶</button>
-                <a href="hope_song.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="Ilakozhiye.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Ilakozhiye</span>
-                    </div>
-                    <span class="sponsor-name">10M views | 936k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="Ilakozhiye.mp3">▶</button>
-                <a href="Ilakozhiye.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="jaalakaari.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Jaalakaari</span>
-                    </div>
-                    <span class="sponsor-name">350k views | 40k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="jaalakaari.mp3">▶</button>
-                <a href="jaalakaari.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="kaadhal_ponmaan.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Kaadhal Ponmaan</span>
-                    </div>
-                    <span class="sponsor-name">560k views | 167k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="kaadhal_ponmaan.mp3">▶</button>
-                <a href="kaadhal_ponmaan.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="kozhipunk.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Kozhipunk</span>
-                    </div>
-                    <span class="sponsor-name">50k views | 14k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="kozhipunk.mp3">▶</button>
-                <a href="kozhipunk.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="neeyorikkal.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Neeyorikkal</span>
-                    </div>
-                    <span class="sponsor-name">1.5M views | 980k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="neeyorikkal.mp3">▶</button>
-                <a href="neeyorikkal.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="madhuramoorunna.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Madhuramoorunna</span>
-                    </div>
-                    <span class="sponsor-name">860k views | 200k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="madhuramoorunna.mp3">▶</button>
-                <a href="madhuramoorunna.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="thani-lokah-murakkaari.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Thani Lokah Murakkaari</span>
-                    </div>
-                    <span class="sponsor-name">365k views | 91k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="thani-lokah-murakkaari.mp3">▶</button>
-                <a href="thani-lokah-murakkaari.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="minnalvala.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Minnalvala</span>
-                    </div>
-                    <span class="sponsor-name">8M views | 2Mk ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="minnalvala.mp3">▶</button>
-                <a href="minnalvala.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="oorum-blood.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Oorum Blood</span>
-                    </div>
-                    <span class="sponsor-name">876k views | 90k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="oorum-blood.m4a">▶</button>
-                <a href="oorum-blood.m4a" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="maine.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Maine Pyar Kiya</span>
-                    </div>
-                    <span class="sponsor-name">80k views | 10k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="maine-pyar-kiya.mp3">▶</button>
-                <a href="maine-pyar-kiya.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="naalo.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Naalo Unna Parema Nantha</span>
-                    </div>
-                    <span class="sponsor-name">500k views | 150k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="naalo-unna-parema-nantha.mp3">▶</button>
-                <a href="naalo-unna-parema-nantha.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="pemari.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Pemari</span>
-                    </div>
-                    <span class="sponsor-name">10M views | 5.2M ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="pemari.mp3">▶</button>
-                <a href="pemari.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="singari.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                     <div class="song-name-container">
-                        <span class="song-name">Singari</span>
-                    </div>
-                    <span class="sponsor-name">3M views | 943k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="singari.mp3">▶</button>
-                <a href="singari.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="permaani.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                    <span class="song-name">Permaani</span>
-                    <span class="sponsor-name">1.4M views | 400k ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="permaani.mp3">▶</button>
-                <a href="permaani.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-            <div class="song-item">
-                <img src="kannukulla.jpg" alt="Song Logo" class="song-logo">
-                <div class="song-info">
-                    <span class="song-name">Kannukulla</span>
-                    <span class="sponsor-name">7.3M views | 4.5M ⬇️</span>
-                </div>
-                <button class="action-button play-button" data-src="kannukulla.mp3">▶</button>
-                <a href="kannukulla.mp3" download class="action-button download-button">⬇️</a>
-            </div>
-        </div>
     </div>
+
     <div class="footer-id"><a href="https://www.instagram.com/a.one.code.official?igsh=MTl5Zm9heGo4dW9ndA==" class="ins"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="ilogo"></a></div>
 
     <div class="footer-note">
-        made by A One Code | last update Saturday, 22 November
+        made by A One Code
     </div>
     
 
@@ -542,99 +428,122 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- GLOBAL AUDIO CONTROL ---
             const audioPlayer = document.getElementById('audioPlayer');
-            const playButtons = document.querySelectorAll('.play-button');
-            let currentlyPlayingButton = null;
+            const songListContainer = document.getElementById('songList');
 
-            // Helper: Stop all animations
-            function resetAnimations() {
-                const allTitles = document.querySelectorAll('.song-name');
-                allTitles.forEach(title => {
-                    title.classList.remove('scrolling-active');
-                });
-            }
-
+            // Function to handle play logic (Moved outside so we can reuse it for new songs)
             function playSong(button) {
                 const songSrc = button.getAttribute('data-src');
-                // Find the title associated with this button (Updated Selector)
-                const songTitleElement = button.parentElement.querySelector('.song-name');
+                const allPlayButtons = document.querySelectorAll('.play-button');
 
-                if (audioPlayer.paused) {
-                    // Scenario 1: Audio is paused, or a new song is being selected
-                    
-                    if (audioPlayer.src.includes(songSrc) && audioPlayer.currentTime > 0) {
-                        // Resume playing
-                        audioPlayer.play();
-                        button.textContent = '⏸'; 
-                        currentlyPlayingButton = button;
-                        
-                        // START ANIMATION
-                        songTitleElement.classList.add('scrolling-active');
-                    } else {
-                        // New song
-                        resetAnimations(); // Stop previous animation
-                        
-                        audioPlayer.src = songSrc;
-                        audioPlayer.play();
-
-                        // Reset the previous button's icon
-                        if (currentlyPlayingButton && currentlyPlayingButton !== button) {
-                            currentlyPlayingButton.textContent = '▶';
-                        }
-                        
-                        button.textContent = '⏸'; 
-                        currentlyPlayingButton = button;
-
-                        // START ANIMATION
-                        songTitleElement.classList.add('scrolling-active');
-                    }
-                    
+                if (audioPlayer.src.includes(songSrc) && !audioPlayer.paused) {
+                    // Pause current song
+                    audioPlayer.pause();
+                    button.textContent = '▶';
                 } else {
-                    // Scenario 2: Audio is currently playing
+                    // Reset all other buttons
+                    allPlayButtons.forEach(btn => btn.textContent = '▶');
 
-                    if (audioPlayer.src.includes(songSrc)) {
-                        // Pause current
-                        audioPlayer.pause();
-                        button.textContent = '▶'; 
-                        
-                        // STOP ANIMATION
-                        songTitleElement.classList.remove('scrolling-active');
-                        
-                    } else {
-                        // Play different song
-                        resetAnimations(); // Stop previous animations
-
-                        audioPlayer.pause(); 
-                        audioPlayer.src = songSrc; 
-                        audioPlayer.play(); 
-
-                        if (currentlyPlayingButton) {
-                            currentlyPlayingButton.textContent = '▶';
-                        }
-                        
-                        button.textContent = '⏸'; 
-                        currentlyPlayingButton = button;
-
-                        // START ANIMATION
-                        songTitleElement.classList.add('scrolling-active');
+                    // Play new song
+                    if (!audioPlayer.src.includes(songSrc)) {
+                        audioPlayer.src = songSrc;
                     }
+                    audioPlayer.play();
+                    button.textContent = '⏸';
                 }
             }
 
-            // Attach the playSong function to all play buttons
-            playButtons.forEach(button => {
+            // Attach listener to existing buttons
+            document.querySelectorAll('.play-button').forEach(button => {
                 button.addEventListener('click', function() {
                     playSong(this);
                 });
             });
 
-            // Reset when the song finishes
             audioPlayer.addEventListener('ended', function() {
-                resetAnimations();
-                if (currentlyPlayingButton) {
-                    currentlyPlayingButton.textContent = '▶';
-                    currentlyPlayingButton = null;
-                }
+                document.querySelectorAll('.play-button').forEach(btn => btn.textContent = '▶');
             });
+
+            // --- UPLOAD MODAL LOGIC ---
+            const modal = document.getElementById("uploadModal");
+            const btn = document.getElementById("openUploadModal");
+            const span = document.getElementsByClassName("close")[0];
+            const submitBtn = document.getElementById("submitUpload");
+            const statusText = document.getElementById("uploadStatus");
+
+            // Open Modal
+            btn.onclick = function() {
+                modal.style.display = "block";
+                statusText.textContent = ""; 
+            }
+
+            // Close Modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // Close if clicking outside
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            // Handle Submit
+            submitBtn.onclick = function() {
+                const nameInput = document.getElementById("uploadName").value;
+                const fileInput = document.getElementById("uploadFile").files[0];
+
+                if (nameInput === "" || !fileInput) {
+                    statusText.textContent = "Please enter a name and select a file.";
+                    statusText.style.color = "red";
+                    return;
+                }
+
+                // SIMULATION OF UPLOAD
+                statusText.textContent = "Uploading to GitHub Server... (Please Wait)";
+                statusText.style.color = "blue";
+                
+                // Simulate a delay (network request)
+                setTimeout(function() {
+                    statusText.textContent = "Upload Successful! (Added to List)";
+                    statusText.style.color = "green";
+
+                    // Create temporary URL for the uploaded file so it plays immediately
+                    const tempFileUrl = URL.createObjectURL(fileInput);
+
+                    // Create new Song HTML
+                    const newSongDiv = document.createElement('div');
+                    newSongDiv.className = 'song-item';
+                    newSongDiv.innerHTML = `
+                        <img src="logo1.jpg" alt="Song Logo" class="song-logo">
+                        <div class="song-info">
+                            <span class="song-name">${nameInput}</span>
+                            <span class="sponsor-name">Uploaded by User</span>
+                        </div>
+                        <button class="action-button play-button" data-src="${tempFileUrl}">▶</button>
+                        <a href="${tempFileUrl}" download="${nameInput}.mp3" class="action-button download-button">⬇️</a>
+                    `;
+
+                    // Add to the top of the list
+                    songListContainer.insertBefore(newSongDiv, songListContainer.firstChild);
+
+                    // Add event listener to the NEW play button
+                    const newPlayBtn = newSongDiv.querySelector('.play-button');
+                    newPlayBtn.addEventListener('click', function() {
+                        playSong(this);
+                    });
+
+                    // Clear inputs
+                    document.getElementById("uploadName").value = "";
+                    document.getElementById("uploadFile").value = "";
+
+                    // Close modal after 1.5 seconds
+                    setTimeout(function() {
+                        modal.style.display = "none";
+                    }, 1500);
+
+                }, 2000); // 2 second fake delay
+            };
 
 
             // --- CAROUSEL SCRIPT ---
@@ -682,12 +591,13 @@
 
             // --- SEARCH FILTER SCRIPT ---
             const searchInput = document.getElementById('songSearch');
-            const songItems = document.querySelectorAll('.song-item');
 
             searchInput.addEventListener('keyup', function() {
                 const filter = searchInput.value.toUpperCase();
+                // Re-select items here in case new ones were added
+                const currentSongItems = document.querySelectorAll('.song-item'); 
 
-                songItems.forEach(item => {
+                currentSongItems.forEach(item => {
                     const songName = item.querySelector('.song-name').textContent.toUpperCase();
                     const sponsorName = item.querySelector('.sponsor-name').textContent.toUpperCase();
 
