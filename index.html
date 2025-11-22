@@ -16,7 +16,15 @@
 
         body {
             font-family: sans-serif;
-            background-color: #f4f4f9; 
+            
+            /* --- BACKGROUND IMAGE SETTINGS --- */
+            background-image: url('bd.jpg'); /* The image you requested */
+            background-size: cover;          /* Ensures image covers full screen */
+            background-position: center;     /* Centers the image */
+            background-attachment: fixed;    /* Keeps bg still while scrolling */
+            background-repeat: no-repeat;    /* Prevents tiling */
+            background-color: #f4f4f9;       /* Fallback color */
+            
             padding-top: 120px; 
             color: #333;
         }
@@ -155,7 +163,8 @@
         .song-item {
             display: flex;
             align-items: center;
-            background-color: white; 
+            /* Made transparent white so background shows slightly or keep white */
+            background-color: rgba(255, 255, 255, 0.95); 
             padding: 10px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
@@ -215,7 +224,9 @@
             margin-top: 30px;
             padding-bottom: 20px;
             font-size: 0.8em;
-            color: #999;
+            color: #333; /* Darkened footer text to see against bg image */
+            font-weight: bold;
+            text-shadow: 1px 1px 2px white; /* Shadow to make text readable on image */
         }
         .ilogo {
             width: 40px;
