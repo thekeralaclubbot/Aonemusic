@@ -250,7 +250,36 @@
         
         .download-button {
             display: inline-block; 
+            /* Added relative positioning for the loader */
+            position: relative;
+            min-width: 30px;
+            text-align: center;
         }
+
+        /* ========================================= */
+        /* NEW LOADING ANIMATION CSS STARTS HERE */
+        /* ========================================= */
+        
+        .loader {
+            border: 3px solid #f3f3f3; /* Light grey */
+            border-top: 3px solid #007bff; /* Blue */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ========================================= */
+        /* NEW LOADING ANIMATION CSS ENDS HERE */
+        /* ========================================= */
+
 
         .footer-note {
             text-align: center;
@@ -555,79 +584,52 @@
 
             function playSong(button) {
                 const songSrc = button.getAttribute('data-src');
-                // Find the title associated with this button (Updated Selector)
+                // Find the title associated with this button
                 const songTitleElement = button.parentElement.querySelector('.song-name');
 
                 if (audioPlayer.paused) {
-                    // Scenario 1: Audio is paused, or a new song is being selected
-                    
                     if (audioPlayer.src.includes(songSrc) && audioPlayer.currentTime > 0) {
-                        // Resume playing
                         audioPlayer.play();
                         button.textContent = '⏸'; 
                         currentlyPlayingButton = button;
-                        
-                        // START ANIMATION
                         songTitleElement.classList.add('scrolling-active');
                     } else {
-                        // New song
-                        resetAnimations(); // Stop previous animation
-                        
+                        resetAnimations(); 
                         audioPlayer.src = songSrc;
                         audioPlayer.play();
-
-                        // Reset the previous button's icon
                         if (currentlyPlayingButton && currentlyPlayingButton !== button) {
                             currentlyPlayingButton.textContent = '▶';
                         }
-                        
                         button.textContent = '⏸'; 
                         currentlyPlayingButton = button;
-
-                        // START ANIMATION
                         songTitleElement.classList.add('scrolling-active');
                     }
-                    
                 } else {
-                    // Scenario 2: Audio is currently playing
-
                     if (audioPlayer.src.includes(songSrc)) {
-                        // Pause current
                         audioPlayer.pause();
                         button.textContent = '▶'; 
-                        
-                        // STOP ANIMATION
                         songTitleElement.classList.remove('scrolling-active');
-                        
                     } else {
-                        // Play different song
-                        resetAnimations(); // Stop previous animations
-
+                        resetAnimations(); 
                         audioPlayer.pause(); 
                         audioPlayer.src = songSrc; 
                         audioPlayer.play(); 
-
                         if (currentlyPlayingButton) {
                             currentlyPlayingButton.textContent = '▶';
                         }
-                        
                         button.textContent = '⏸'; 
                         currentlyPlayingButton = button;
-
-                        // START ANIMATION
                         songTitleElement.classList.add('scrolling-active');
                     }
                 }
             }
 
-            // Attach the playSong function to all play buttons
             playButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     playSong(this);
                 });
             });
 
-            // Reset when the song finishes
             audioPlayer.addEventListener('ended', function() {
                 resetAnimations();
                 if (currentlyPlayingButton) {
@@ -635,6 +637,43 @@
                     currentlyPlayingButton = null;
                 }
             });
+
+            // --- NEW DOWNLOAD BUTTON ANIMATION LOGIC ---
+            const downloadButtons = document.querySelectorAll('.download-button');
+
+            downloadButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault(); // 1. Stop the immediate download
+
+                    // Store the original content (the arrow) and the file URL
+                    const originalContent = this.innerHTML;
+                    const songUrl = this.getAttribute('href');
+
+                    // 2. Change the button content to the Loader DIV
+                    this.innerHTML = '<div class="loader"></div>';
+                    
+                    // Disable clicking again while loading
+                    this.style.pointerEvents = 'none'; 
+
+                    // 3. Wait for 2 seconds (2000 milliseconds)
+                    setTimeout(() => {
+                        // Restore the original button look
+                        this.innerHTML = originalContent;
+                        this.style.pointerEvents = 'auto';
+
+                        // 4. Trigger the actual download
+                        // We create a temporary invisible link and click it programmatically
+                        const tempLink = document.createElement('a');
+                        tempLink.href = songUrl;
+                        tempLink.setAttribute('download', ''); // Ensure it downloads
+                        document.body.appendChild(tempLink);
+                        tempLink.click();
+                        document.body.removeChild(tempLink);
+
+                    }, 2000); // Change 2000 to whatever delay you want
+                });
+            });
+            // -------------------------------------------
 
 
             // --- CAROUSEL SCRIPT ---
