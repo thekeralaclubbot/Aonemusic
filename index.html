@@ -18,12 +18,14 @@
             font-family: sans-serif;
             
             /* --- BACKGROUND IMAGE SETTINGS --- */
-            background-image: url('logo1.jpg,Nera.jpg'); 
+            /* Note: The original had 'logo1.jpg,Nera.jpg' which is invalid. 
+               It is corrected here to use a single image or set background-color only. */
+            background-color: #f4f4f9; 
+            background-image: url('logo1.jpg'); /* Adjusted to use a single image path */
             background-size: cover;          
             background-position: center;     
             background-attachment: fixed;    
             background-repeat: no-repeat;    
-            background-color: #f4f4f9;       
             
             padding-top: 120px; 
             color: #333;
@@ -207,9 +209,7 @@
             text-overflow: ellipsis;
         }
 
-        /* --- ANIMATION WHEN PLAYING --- */
-        
-        /* When 'scrolling-active' is added, change styles to allow scrolling */
+        /* --- ANIMATION WHEN PLAYING (Marquee Scroll) --- */
         .song-name.scrolling-active {
             width: auto; /* Allow full width */
             overflow: visible;
@@ -250,36 +250,15 @@
         
         .download-button {
             display: inline-block; 
-            /* Added relative positioning for the loader */
             position: relative;
             min-width: 30px;
             text-align: center;
         }
-
-        /* ========================================= */
-        /* NEW LOADING ANIMATION CSS STARTS HERE */
-        /* ========================================= */
         
-        .loader {
-            border: 3px solid #f3f3f3; /* Light grey */
-            border-top: 3px solid #007bff; /* Blue */
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* ========================================= */
-        /* NEW LOADING ANIMATION CSS ENDS HERE */
-        /* ========================================= */
-
+        /* *** DOWNLOAD BUTTON ANIMATION CSS REMOVED ***
+           The .loader and @keyframes spin rules were removed here 
+           to correct the issue.
+        */
 
         .footer-note {
             text-align: center;
@@ -642,41 +621,10 @@
                 }
             });
 
-            // --- NEW DOWNLOAD BUTTON ANIMATION LOGIC ---
-            const downloadButtons = document.querySelectorAll('.download-button');
-
-            downloadButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault(); // 1. Stop the immediate download
-
-                    // Store the original content (the arrow) and the file URL
-                    const originalContent = this.innerHTML;
-                    const songUrl = this.getAttribute('href');
-
-                    // 2. Change the button content to the Loader DIV
-                    this.innerHTML = '<div class="loader"></div>';
-                    
-                    // Disable clicking again while loading
-                    this.style.pointerEvents = 'none'; 
-
-                    // 3. Wait for 2 seconds (2000 milliseconds)
-                    setTimeout(() => {
-                        // Restore the original button look
-                        this.innerHTML = originalContent;
-                        this.style.pointerEvents = 'auto';
-
-                        // 4. Trigger the actual download
-                        // We create a temporary invisible link and click it programmatically
-                        const tempLink = document.createElement('a');
-                        tempLink.href = songUrl;
-                        tempLink.setAttribute('download', ''); // Ensure it downloads
-                        document.body.appendChild(tempLink);
-                        tempLink.click();
-                        document.body.removeChild(tempLink);
-
-                    }, 2000); // Change 2000 to whatever delay you want
-                });
-            });
+            // --- DOWNLOAD BUTTON LOGIC (NO ANIMATION) ---
+            // The logic for the spinning loader was removed here.
+            // Download buttons now use the native HTML <a> download attribute
+            // and work instantly without custom JS handling.
             // -------------------------------------------
 
 
