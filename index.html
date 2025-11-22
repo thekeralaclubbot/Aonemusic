@@ -18,12 +18,12 @@
             font-family: sans-serif;
             
             /* --- BACKGROUND IMAGE SETTINGS --- */
-            background-image: url('bd.jpg'); /* The image you requested */
-            background-size: cover;          /* Ensures image covers full screen */
-            background-position: center;     /* Centers the image */
-            background-attachment: fixed;    /* Keeps bg still while scrolling */
-            background-repeat: no-repeat;    /* Prevents tiling */
-            background-color: #f4f4f9;       /* Fallback color */
+            background-image: url('bd.jpg'); 
+            background-size: cover;          
+            background-position: center;     
+            background-attachment: fixed;    
+            background-repeat: no-repeat;    
+            background-color: #f4f4f9;       
             
             padding-top: 120px; 
             color: #333;
@@ -163,7 +163,6 @@
         .song-item {
             display: flex;
             align-items: center;
-            /* Made transparent white so background shows slightly or keep white */
             background-color: rgba(255, 255, 255, 0.95); 
             padding: 10px;
             border-radius: 10px;
@@ -178,19 +177,54 @@
             background-color: #ccc; 
         }
 
+        /* Song info container needs relative positioning for absolute child */
         .song-info {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            overflow: hidden; /* Masks the scrolling text */
+            position: relative;
+            justify-content: center;
+            height: 50px; /* Ensure height matches logo for alignment */
+        }
+
+        .song-name-container {
+            width: 100%;
             overflow: hidden;
+            white-space: nowrap;
         }
 
         .song-name {
             font-weight: bold;
             font-size: 1.1em;
             white-space: nowrap;
+            display: inline-block;
+            transition: color 0.3s ease;
+            
+            /* Default state (not playing): truncate with ellipsis */
+            width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        /* --- ANIMATION WHEN PLAYING --- */
+        
+        /* When 'scrolling-active' is added, change styles to allow scrolling */
+        .song-name.scrolling-active {
+            width: auto; /* Allow full width */
+            overflow: visible;
+            text-overflow: clip;
+            color: #ff4500; /* Change color to Orange/Red */
+            font-size: 1.3em; /* Slightly bigger */
+            
+            /* The Animation */
+            animation: marquee 10s linear infinite;
+            padding-left: 100%; /* Start off-screen right */
+        }
+
+        @keyframes marquee {
+            0%   { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
         }
 
         .sponsor-name {
@@ -199,9 +233,9 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin-top: 2px;
         }
 
-        /* Updated button styles for consistency */
         .action-button {
             text-decoration: none; 
             background: none;
@@ -211,11 +245,10 @@
             padding: 5px;
             margin-left: 10px;
             color: #007bff; 
-            line-height: 1; /* Helps vertically align the icon */
+            line-height: 1; 
         }
         
         .download-button {
-            /* Ensures download button stays as an anchor for file download */
             display: inline-block; 
         }
 
@@ -224,9 +257,9 @@
             margin-top: 30px;
             padding-bottom: 20px;
             font-size: 0.8em;
-            color: #333; /* Darkened footer text to see against bg image */
+            color: #333; 
             font-weight: bold;
-            text-shadow: 1px 1px 2px white; /* Shadow to make text readable on image */
+            text-shadow: 1px 1px 2px white; 
         }
         .ilogo {
             width: 40px;
@@ -279,7 +312,9 @@
             <div class="song-item">
                 <img src="mhr.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">MHR Muntirichar</span>
+                    <div class="song-name-container">
+                        <span class="song-name">MHR Muntirichar</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="mhr_munthirichar.mp3">▶</button>
@@ -288,7 +323,9 @@
             <div class="song-item">
                 <img src="nera.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Nera</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Nera</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="Nera.mp3">▶</button>
@@ -297,7 +334,9 @@
             <div class="song-item">
                 <img src="shariya.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Shariya</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Shariya</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="Shariya.mp3">▶</button>
@@ -310,7 +349,9 @@
             <div class="song-item">
                 <img src="salam.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Salam</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Salam</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="Salam.mp3">▶</button>
@@ -319,7 +360,9 @@
             <div class="song-item">
                 <img src="hope.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Hope song</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Hope song</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="hope_song.mp3">▶</button>
@@ -328,7 +371,9 @@
             <div class="song-item">
                 <img src="Ilakozhiye.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Ilakozhiye</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Ilakozhiye</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="Ilakozhiye.mp3">▶</button>
@@ -337,7 +382,9 @@
             <div class="song-item">
                 <img src="jaalakaari.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Jaalakaari</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Jaalakaari</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="jaalakaari.mp3">▶</button>
@@ -346,7 +393,9 @@
             <div class="song-item">
                 <img src="kaadhal_ponmaan.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Kaadhal Ponmaan</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Kaadhal Ponmaan</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="kaadhal_ponmaan.mp3">▶</button>
@@ -355,7 +404,9 @@
             <div class="song-item">
                 <img src="kozhipunk.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Kozhipunk</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Kozhipunk</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="kozhipunk.mp3">▶</button>
@@ -364,7 +415,9 @@
             <div class="song-item">
                 <img src="neeyorikkal.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Neeyorikkal</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Neeyorikkal</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="neeyorikkal.mp3">▶</button>
@@ -373,7 +426,9 @@
             <div class="song-item">
                 <img src="madhuramoorunna.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Madhuramoorunna</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Madhuramoorunna</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="madhuramoorunna.mp3">▶</button>
@@ -382,7 +437,9 @@
             <div class="song-item">
                 <img src="thani-lokah-murakkaari.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Thani Lokah Murakkaari</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Thani Lokah Murakkaari</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="thani-lokah-murakkaari.mp3">▶</button>
@@ -391,7 +448,9 @@
             <div class="song-item">
                 <img src="minnalvala.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Minnalvala</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Minnalvala</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="minnalvala.mp3">▶</button>
@@ -400,7 +459,9 @@
             <div class="song-item">
                 <img src="oorum-blood.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Oorum Blood</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Oorum Blood</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="oorum-blood.m4a">▶</button>
@@ -409,7 +470,9 @@
             <div class="song-item">
                 <img src="maine.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Maine Pyar Kiya</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Maine Pyar Kiya</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="maine-pyar-kiya.mp3">▶</button>
@@ -418,7 +481,9 @@
             <div class="song-item">
                 <img src="naalo.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Naalo Unna Parema Nantha</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Naalo Unna Parema Nantha</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="naalo-unna-parema-nantha.mp3">▶</button>
@@ -427,7 +492,9 @@
             <div class="song-item">
                 <img src="pemari.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Pemari</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Pemari</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="pemari.mp3">▶</button>
@@ -436,7 +503,9 @@
             <div class="song-item">
                 <img src="singari.jpg" alt="Song Logo" class="song-logo">
                 <div class="song-info">
-                    <span class="song-name">Singari</span>
+                     <div class="song-name-container">
+                        <span class="song-name">Singari</span>
+                    </div>
                     <span class="sponsor-name">Sponsore: AL Techy</span>
                 </div>
                 <button class="action-button play-button" data-src="singari.mp3">▶</button>
@@ -458,52 +527,77 @@
             const playButtons = document.querySelectorAll('.play-button');
             let currentlyPlayingButton = null;
 
+            // Helper: Stop all animations
+            function resetAnimations() {
+                const allTitles = document.querySelectorAll('.song-name');
+                allTitles.forEach(title => {
+                    title.classList.remove('scrolling-active');
+                });
+            }
+
             function playSong(button) {
                 const songSrc = button.getAttribute('data-src');
+                // Find the title associated with this button (Updated Selector)
+                const songTitleElement = button.parentElement.querySelector('.song-name');
 
                 if (audioPlayer.paused) {
                     // Scenario 1: Audio is paused, or a new song is being selected
                     
                     if (audioPlayer.src.includes(songSrc) && audioPlayer.currentTime > 0) {
-                        // If it's the same song, resume playing
+                        // Resume playing
                         audioPlayer.play();
-                        button.textContent = '⏸'; // Change icon to pause
+                        button.textContent = '⏸'; 
                         currentlyPlayingButton = button;
+                        
+                        // START ANIMATION
+                        songTitleElement.classList.add('scrolling-active');
                     } else {
-                        // If it's a new song, load and play it
+                        // New song
+                        resetAnimations(); // Stop previous animation
+                        
                         audioPlayer.src = songSrc;
                         audioPlayer.play();
 
-                        // Reset the previous button's icon if a different song was playing/paused
+                        // Reset the previous button's icon
                         if (currentlyPlayingButton && currentlyPlayingButton !== button) {
                             currentlyPlayingButton.textContent = '▶';
                         }
                         
-                        button.textContent = '⏸'; // Change icon to pause
+                        button.textContent = '⏸'; 
                         currentlyPlayingButton = button;
+
+                        // START ANIMATION
+                        songTitleElement.classList.add('scrolling-active');
                     }
                     
                 } else {
                     // Scenario 2: Audio is currently playing
 
                     if (audioPlayer.src.includes(songSrc)) {
-                        // If it's the currently playing song, pause it
+                        // Pause current
                         audioPlayer.pause();
-                        button.textContent = '▶'; // Change icon to play
+                        button.textContent = '▶'; 
+                        
+                        // STOP ANIMATION
+                        songTitleElement.classList.remove('scrolling-active');
                         
                     } else {
-                        // If a different song is playing, stop the current one and start the new one
-                        audioPlayer.pause(); // Pause old song
-                        audioPlayer.src = songSrc; // Load new song
-                        audioPlayer.play(); // Play new song
+                        // Play different song
+                        resetAnimations(); // Stop previous animations
 
-                        // Reset the old button's icon
+                        audioPlayer.pause(); 
+                        audioPlayer.src = songSrc; 
+                        audioPlayer.play(); 
+
                         if (currentlyPlayingButton) {
                             currentlyPlayingButton.textContent = '▶';
                         }
                         
-                        button.textContent = '⏸'; // Change icon to pause
+                        button.textContent = '⏸'; 
                         currentlyPlayingButton = button;
+
+                        // START ANIMATION
+                        songTitleElement.classList.add('scrolling-active');
                     }
                 }
             }
@@ -515,8 +609,9 @@
                 });
             });
 
-            // Reset the play button icon when the song finishes
+            // Reset when the song finishes
             audioPlayer.addEventListener('ended', function() {
+                resetAnimations();
                 if (currentlyPlayingButton) {
                     currentlyPlayingButton.textContent = '▶';
                     currentlyPlayingButton = null;
@@ -524,7 +619,7 @@
             });
 
 
-            // --- CAROUSEL SCRIPT (Same as before) ---
+            // --- CAROUSEL SCRIPT ---
             const slider = document.getElementById('adSlider');
             const indicatorContainer = document.getElementById('adIndicators');
             const adImages = document.querySelectorAll('.ad-image');
@@ -567,7 +662,7 @@
                 });
             });
 
-            // --- SEARCH FILTER SCRIPT (Same as before) ---
+            // --- SEARCH FILTER SCRIPT ---
             const searchInput = document.getElementById('songSearch');
             const songItems = document.querySelectorAll('.song-item');
 
