@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A One Music - Upload</title>
+    <link rel="icon" href="logo1.jpg" type="image/jpeg">
+
+    <style>
+        /* MATCHING YOUR SITE STYLE */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+
+        body {
+            background-color: #f4f4f9; 
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Card Container */
+        .upload-card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header-section h2 { color: #007bff; margin-bottom: 10px; }
+        .header-section p { color: #666; font-size: 0.9em; margin-bottom: 25px; }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #444; }
+
+        /* Text Input */
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
+            background-color: #f9f9f9;
+        }
+        input[type="text"]:focus { border-color: #007bff; }
+
+        /* File Upload Box */
+        .file-drop-box {
+            border: 2px dashed #007bff;
+            background-color: #f0f7ff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: 0.3s;
+        }
+        .file-drop-box:hover { background-color: #e0efff; }
+        
+        .file-drop-box input[type="file"] {
+            position: absolute;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .file-msg { color: #007bff; font-weight: 500; font-size: 0.9em; }
+        .selected-file-name { margin-top: 8px; font-size: 0.8em; color: #333; font-weight: bold; }
+
+        /* Thumbnail Preview */
+        .preview-img {
+            max-width: 100px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none; /* Hidden by default */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Buttons */
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        .submit-btn:hover { background-color: #0056b3; }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: #777;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .back-link:hover { color: #333; }
+
+        #statusMessage { margin-top: 15px; font-weight: bold; color: #007bff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="upload-card">
+        <div class="header-section">
+            <h2>Upload Song</h2>
+            <p>Add your music to A One Music library</p>
+        </div>
+
+        <form id="uploadForm">
+            <div class="form-group">
+                <label>Song Title</label>
+                <input type="text" id="songName" placeholder="e.g. My New Track" required>
+            </div>
+
+            <div class="form-group">
+                <label>Audio File (MP3)</label>
+                <div class="file-drop-box">
+                    <span class="file-msg">📂 Tap to select MP3</span>
+                    <input type="file" id="audioFile" accept="audio/*" required>
+                </div>
+                <div id="audioNameDisplay" class="selected-file-name"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Cover Photo (JPG/PNG)</label>
+                <div class="file-drop-box">
+                    <span class="file-msg">🖼️ Tap to select Image</span>
+                    <input type="file" id="imageFile" accept="image/*" required>
+                </div>
+                <center><img id="imgPreview" class="preview-img" src="" alt="Preview"></center>
+            </div>
+
+            <button type="submit" class="submit-btn">Publish Now</button>
+        </form>
+
+        <div id="statusMessage"></div>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+
+    <script>
+    // 1. Show Audio Filename when selected
+    document.getElementById('audioFile').addEventListener('change', function() {
+        if(this.files[0]) {
+            document.getElementById('audioNameDisplay').textContent = "Selected: " + this.files[0].name;
+        }
+    });
+
+    // 2. Show Image Preview when selected
+    document.getElementById('imageFile').addEventListener('change', function() {
+        if(this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('imgPreview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+
+    // 3. Handle Submit and Save to Local Storage
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const songName = document.getElementById('songName').value;
+        const audioInput = document.getElementById('audioFile');
+        const imageInput = document.getElementById('imageFile');
+        const status = document.getElementById('statusMessage');
+        const btn = document.querySelector('.submit-btn');
+
+        if (audioInput.files.length > 0 && imageInput.files.length > 0) {
+            btn.innerHTML = "Processing...";
+            
+            // We need to convert files to Data URLs to store them in the browser
+            const audioReader = new FileReader();
+            const imageReader = new FileReader();
+
+            // Read Audio
+            audioReader.readAsDataURL(audioInput.files[0]);
+            audioReader.onload = function(audioEvent) {
+                const audioData = audioEvent.target.result;
+
+                // Read Image
+                imageReader.readAsDataURL(imageInput.files[0]);
+                imageReader.onload = function(imageEvent) {
+                    const imageData = imageEvent.target.result;
+
+                    // Create Song Object
+                    const newSong = {
+                        name: songName,
+                        audio: audioData, // The actual mp3 file data
+                        image: imageData, // The actual image data
+                        views: "0",
+                        downloads: "0"
+                    };
+
+                    // Get existing songs or start empty array
+                    let storedSongs = JSON.parse(localStorage.getItem('myUploadedSongs')) || [];
+                    storedSongs.push(newSong);
+
+                    // Save back to Local Storage
+                    localStorage.setItem('myUploadedSongs', JSON.stringify(storedSongs));
+
+                    status.innerHTML = "✅ Song Published! Redirecting...";
+                    
+                    // Redirect to home page after 1 second
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 1000);
+                }
+            }
+        }
+    });
+</script>
+
+
+</body>
+</html>
