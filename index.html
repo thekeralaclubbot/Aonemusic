@@ -16,12 +16,8 @@
 
         body {
             font-family: sans-serif;
-            
-            /* --- BACKGROUND IMAGE SETTINGS --- */
-            /* Note: The original had 'logo1.jpg,Nera.jpg' which is invalid. 
-               It is corrected here to use a single image or set background-color only. */
             background-color: #f4f4f9; 
-            background-image: url('logo1.jpg'); /* Adjusted to use a single image path */
+            background-image: url('logo1.jpg'); 
             background-size: cover;          
             background-position: center;     
             background-attachment: fixed;    
@@ -116,12 +112,14 @@
 
         .ad-slider {
             display: flex;
+            /* Calculate width dynamically based on 6 images (100% * 6) */
             width: 600%; 
             height: 100%;
             transition: transform 0.5s ease-in-out; 
         }
 
         .ad-image {
+            /* Set each image to 1/6th of the total slider width */
             width: calc(100% / 6); 
             height: 100%;
             object-fit: cover;
@@ -149,6 +147,7 @@
             background-color: #bbb;
             border-radius: 50%;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .dot.active {
@@ -177,17 +176,17 @@
             border-radius: 8px;
             margin-right: 15px;
             background-color: #ccc; 
+            object-fit: cover; /* Ensure image fits well */
         }
 
-        /* Song info container needs relative positioning for absolute child */
         .song-info {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Masks the scrolling text */
+            overflow: hidden; 
             position: relative;
             justify-content: center;
-            height: 50px; /* Ensure height matches logo for alignment */
+            height: 50px; 
         }
 
         .song-name-container {
@@ -203,7 +202,7 @@
             display: inline-block;
             transition: color 0.3s ease;
             
-            /* Default state (not playing): truncate with ellipsis */
+            /* Default state: truncate with ellipsis */
             width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -211,20 +210,22 @@
 
         /* --- ANIMATION WHEN PLAYING (Marquee Scroll) --- */
         .song-name.scrolling-active {
-            width: auto; /* Allow full width */
+            width: auto; 
             overflow: visible;
             text-overflow: clip;
-            color: #ff4500; /* Change color to Orange/Red */
-            font-size: 1.3em; /* Slightly bigger */
+            color: #ff4500; 
+            font-size: 1.2em; /* Slightly bigger, adjusted for cleaner look */
             
             /* The Animation */
             animation: marquee 10s linear infinite;
-            padding-left: 100%; /* Start off-screen right */
+            /* Adjust padding-left to ensure smooth start off-screen right */
+            padding-left: 100%; 
         }
 
         @keyframes marquee {
             0%   { transform: translate(0, 0); }
-            100% { transform: translate(-100%, 0); }
+            /* Adjusted translation to prevent 'snap' at the end */
+            100% { transform: translate(calc(-100% - 20px), 0); } 
         }
 
         .sponsor-name {
@@ -253,13 +254,11 @@
             position: relative;
             min-width: 30px;
             text-align: center;
+            /* Added transition for visual feedback on click */
+            transition: opacity 0.2s; 
         }
         
-        /* *** DOWNLOAD BUTTON ANIMATION CSS REMOVED ***
-           The .loader and @keyframes spin rules were removed here 
-           to correct the issue.
-        */
-
+        /* Footer/Social Link Styling */
         .footer-note {
             text-align: center;
             margin-top: 30px;
@@ -282,6 +281,7 @@
             font-size: 0.8em;
             color: #999;
             }
+        
     </style>
 </head>
 <body>
@@ -312,7 +312,7 @@
                 <img src="ad6.jpg" alt="Advertisement 6" class="ad-image">
             </div>
             <div class="ad-indicators" id="adIndicators">
-            </div>
+                </div>
         </div>
         
 
@@ -326,7 +326,7 @@
                     <span class="sponsor-name">80M views | 10M ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="mhr_munthirichar.mp3">▶</button>
-                <a href="mhr_munthirichar.mp3" download class="action-button download-button">⬇️</a>
+                <a href="mhr_munthirichar.mp3" download="MHR_Muntirichar.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="nera.jpg" alt="Song Logo" class="song-logo">
@@ -337,7 +337,7 @@
                     <span class="sponsor-name">1M views | 500k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="Nera.mp3">▶</button>
-                <a href="Nera.mp3" download class="action-button download-button">⬇️</a>
+                <a href="Nera.mp3" download="Nera.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="shariya.jpg" alt="Song Logo" class="song-logo">
@@ -348,7 +348,7 @@
                     <span class="sponsor-name">100k views | 50k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="Shariya.mp3">▶</button>
-                <a href="Shariya.mp3" download class="action-button download-button">⬇️</a>
+                <a href="Shariya.mp3" download="Shariya.mp3" class="action-button download-button">⬇️</a>
             </div>
 
 
@@ -363,7 +363,7 @@
                     <span class="sponsor-name">220k views | 25k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="Salam.mp3">▶</button>
-                <a href="Salam.mp3" download class="action-button download-button">⬇️</a>
+                <a href="Salam.mp3" download="Salam.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="hope.jpg" alt="Song Logo" class="song-logo">
@@ -374,7 +374,7 @@
                     <span class="sponsor-name">500k views | 100k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="hope_song.mp3">▶</button>
-                <a href="hope_song.mp3" download class="action-button download-button">⬇️</a>
+                <a href="hope_song.mp3" download="Hope_song.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="Ilakozhiye.jpg" alt="Song Logo" class="song-logo">
@@ -385,7 +385,7 @@
                     <span class="sponsor-name">10M views | 936k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="Ilakozhiye.mp3">▶</button>
-                <a href="Ilakozhiye.mp3" download class="action-button download-button">⬇️</a>
+                <a href="Ilakozhiye.mp3" download="Ilakozhiye.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="jaalakaari.jpg" alt="Song Logo" class="song-logo">
@@ -396,7 +396,7 @@
                     <span class="sponsor-name">350k views | 40k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="jaalakaari.mp3">▶</button>
-                <a href="jaalakaari.mp3" download class="action-button download-button">⬇️</a>
+                <a href="jaalakaari.mp3" download="Jaalakaari.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="kaadhal_ponmaan.jpg" alt="Song Logo" class="song-logo">
@@ -407,7 +407,7 @@
                     <span class="sponsor-name">560k views | 167k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="kaadhal_ponmaan.mp3">▶</button>
-                <a href="kaadhal_ponmaan.mp3" download class="action-button download-button">⬇️</a>
+                <a href="kaadhal_ponmaan.mp3" download="Kaadhal_Ponmaan.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="kozhipunk.jpg" alt="Song Logo" class="song-logo">
@@ -418,7 +418,7 @@
                     <span class="sponsor-name">50k views | 14k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="kozhipunk.mp3">▶</button>
-                <a href="kozhipunk.mp3" download class="action-button download-button">⬇️</a>
+                <a href="kozhipunk.mp3" download="Kozhipunk.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="neeyorikkal.jpg" alt="Song Logo" class="song-logo">
@@ -429,7 +429,7 @@
                     <span class="sponsor-name">1.5M views | 980k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="neeyorikkal.mp3">▶</button>
-                <a href="neeyorikkal.mp3" download class="action-button download-button">⬇️</a>
+                <a href="neeyorikkal.mp3" download="Neeyorikkal.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="madhuramoorunna.jpg" alt="Song Logo" class="song-logo">
@@ -440,7 +440,7 @@
                     <span class="sponsor-name">860k views | 200k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="madhuramoorunna.mp3">▶</button>
-                <a href="madhuramoorunna.mp3" download class="action-button download-button">⬇️</a>
+                <a href="madhuramoorunna.mp3" download="Madhuramoorunna.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="thani-lokah-murakkaari.jpg" alt="Song Logo" class="song-logo">
@@ -451,7 +451,7 @@
                     <span class="sponsor-name">365k views | 91k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="thani-lokah-murakkaari.mp3">▶</button>
-                <a href="thani-lokah-murakkaari.mp3" download class="action-button download-button">⬇️</a>
+                <a href="thani-lokah-murakkaari.mp3" download="Thani_Lokah_Murakkaari.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="minnalvala.jpg" alt="Song Logo" class="song-logo">
@@ -462,7 +462,7 @@
                     <span class="sponsor-name">8M views | 2Mk ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="minnalvala.mp3">▶</button>
-                <a href="minnalvala.mp3" download class="action-button download-button">⬇️</a>
+                <a href="minnalvala.mp3" download="Minnalvala.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="oorum-blood.jpg" alt="Song Logo" class="song-logo">
@@ -473,7 +473,7 @@
                     <span class="sponsor-name">876k views | 90k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="oorum-blood.m4a">▶</button>
-                <a href="oorum-blood.m4a" download class="action-button download-button">⬇️</a>
+                <a href="oorum-blood.m4a" download="Oorum_Blood.m4a" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="maine.jpg" alt="Song Logo" class="song-logo">
@@ -484,7 +484,7 @@
                     <span class="sponsor-name">80k views | 10k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="maine-pyar-kiya.mp3">▶</button>
-                <a href="maine-pyar-kiya.mp3" download class="action-button download-button">⬇️</a>
+                <a href="maine-pyar-kiya.mp3" download="Maine_Pyar_Kiya.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="naalo.jpg" alt="Song Logo" class="song-logo">
@@ -495,7 +495,7 @@
                     <span class="sponsor-name">500k views | 150k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="naalo-unna-parema-nantha.mp3">▶</button>
-                <a href="naalo-unna-parema-nantha.mp3" download class="action-button download-button">⬇️</a>
+                <a href="naalo-unna-parema-nantha.mp3" download="Naalo_Unna_Parema_Nantha.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="pemari.jpg" alt="Song Logo" class="song-logo">
@@ -506,7 +506,7 @@
                     <span class="sponsor-name">10M views | 5.2M ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="pemari.mp3">▶</button>
-                <a href="pemari.mp3" download class="action-button download-button">⬇️</a>
+                <a href="pemari.mp3" download="Pemari.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="singari.jpg" alt="Song Logo" class="song-logo">
@@ -517,7 +517,7 @@
                     <span class="sponsor-name">3M views | 943k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="singari.mp3">▶</button>
-                <a href="singari.mp3" download class="action-button download-button">⬇️</a>
+                <a href="singari.mp3" download="Singari.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="permaani.jpg" alt="Song Logo" class="song-logo">
@@ -528,7 +528,7 @@
                     <span class="sponsor-name">1.4M views | 400k ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="permaani.mp3">▶</button>
-                <a href="permaani.mp3" download class="action-button download-button">⬇️</a>
+                <a href="permaani.mp3" download="Permaani.mp3" class="action-button download-button">⬇️</a>
             </div>
             <div class="song-item">
                 <img src="kannukulla.jpg" alt="Song Logo" class="song-logo">
@@ -539,14 +539,14 @@
                     <span class="sponsor-name">7.3M views | 4.5M ⬇️</span>
                 </div>
                 <button class="action-button play-button" data-src="kannukulla.mp3">▶</button>
-                <a href="kannukulla.mp3" download class="action-button download-button">⬇️</a>
+                <a href="kannukulla.mp3" download="Kannukulla.mp3" class="action-button download-button">⬇️</a>
             </div>
         </div>
     </div>
-    <div class="footer-id"><a href="https://www.instagram.com/a.one.code.official?igsh=MTl5Zm9heGo4dW9ndA==" class="ins"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="ilogo"></a></div>
+    <div class="footer-id"><a href="https://www.instagram.com/a.one.code.official?igsh=MTl5Zm9heGo4dW9ndA==" class="ins" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="ilogo"></a></div>
 
     <div class="footer-note">
-        made by A One Code | last update Saturday, 22 November
+        made by **A One Code** | last update Saturday, 22 November
     </div>
     
 
@@ -555,6 +555,7 @@
             // --- GLOBAL AUDIO CONTROL ---
             const audioPlayer = document.getElementById('audioPlayer');
             const playButtons = document.querySelectorAll('.play-button');
+            const downloadButtons = document.querySelectorAll('.download-button'); // Get all download buttons
             let currentlyPlayingButton = null;
 
             // Helper: Stop all animations
@@ -567,16 +568,17 @@
 
             function playSong(button) {
                 const songSrc = button.getAttribute('data-src');
-                // Find the title associated with this button
                 const songTitleElement = button.parentElement.querySelector('.song-name');
 
                 if (audioPlayer.paused) {
                     if (audioPlayer.src.includes(songSrc) && audioPlayer.currentTime > 0) {
+                        // Resume current song
                         audioPlayer.play();
                         button.textContent = '⏸'; 
                         currentlyPlayingButton = button;
                         songTitleElement.classList.add('scrolling-active');
                     } else {
+                        // Play new song
                         resetAnimations(); 
                         audioPlayer.src = songSrc;
                         audioPlayer.play();
@@ -589,10 +591,12 @@
                     }
                 } else {
                     if (audioPlayer.src.includes(songSrc)) {
+                        // Pause current song
                         audioPlayer.pause();
                         button.textContent = '▶'; 
                         songTitleElement.classList.remove('scrolling-active');
                     } else {
+                        // Switch to new song
                         resetAnimations(); 
                         audioPlayer.pause(); 
                         audioPlayer.src = songSrc; 
@@ -621,11 +625,17 @@
                 }
             });
 
-            // --- DOWNLOAD BUTTON LOGIC (NO ANIMATION) ---
-            // The logic for the spinning loader was removed here.
-            // Download buttons now use the native HTML <a> download attribute
-            // and work instantly without custom JS handling.
-            // -------------------------------------------
+            // --- DOWNLOAD BUTTON CLICK FEEDBACK (Visual Only) ---
+            downloadButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Provide brief visual feedback that the button was clicked
+                    this.style.opacity = '0.5';
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                    }, 200);
+                    // The native HTML `download` attribute handles the actual download
+                });
+            });
 
 
             // --- CAROUSEL SCRIPT ---
@@ -635,14 +645,19 @@
             let currentIndex = 0;
             const totalImages = adImages.length;
             const intervalTime = 3000;
-
+            
+            // Generate dots and attach listeners
             for (let i = 0; i < totalImages; i++) {
                 const dot = document.createElement('span');
                 dot.classList.add('dot');
                 dot.dataset.index = i;
+                dot.addEventListener('click', function() {
+                    currentIndex = parseInt(this.dataset.index);
+                    updateSlider();
+                });
                 indicatorContainer.appendChild(dot);
             }
-            const dots = document.querySelectorAll('.dot');
+            const dots = document.querySelectorAll('.dot'); // Must re-select after creating them
 
             function updateSlider() {
                 const translateValue = -currentIndex * (100 / totalImages);
@@ -661,16 +676,9 @@
                 updateSlider();
             }
 
-            updateSlider();
+            updateSlider(); // Initialize the slider position and first active dot
             setInterval(nextSlide, intervalTime);
             
-            dots.forEach(dot => {
-                dot.addEventListener('click', function() {
-                    currentIndex = parseInt(this.dataset.index);
-                    updateSlider();
-                });
-            });
-
             // --- SEARCH FILTER SCRIPT ---
             const searchInput = document.getElementById('songSearch');
             const songItems = document.querySelectorAll('.song-item');
