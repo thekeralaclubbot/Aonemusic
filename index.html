@@ -3,493 +3,417 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A One Music Bot | Modern Chat UI</title>
-    <link rel="icon" href="logo.jpg" type="image/jpeg">
+    <title>Node Music</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
     <style>
-        /* ========================================
-        --- MODERN MINIMALIST & ANIMATED STYLES --- 
-        ========================================
-        */
-        :root {
-            /* Minimalist Colors */
-            --primary-accent: #7C3AED;  /* Violet/Purple for actions/user messages */
-            --bot-bg: #F3F4F6;         /* Light Gray for bot messages */
-            --user-bg: var(--primary-accent);
-            --header-bg: #FFFFFF;
-            --chat-bg: #FFFFFF;
-            --text-dark: #1F2937;
-            --text-light: #4B5563;
-        }
-
+        /* Basic Reset */
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #E5E7EB; /* Very light subtle background */
+            font-family: 'Poppins', sans-serif;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            height: 100vh; 
+            padding: 0;
+            background-color: #f4f7fa; /* Light background */
+            color: #333;
         }
 
-        .app-container {
-            width: 100vw; 
-            max-width: 400px;
-            background-color: var(--chat-bg); 
+        /* --- Header Section --- */
+        .app-header {
+            background-color: #1e88e5; /* A vibrant blue color */
+            color: white;
+            padding: 15px 20px;
             display: flex;
-            flex-direction: column;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); 
-            height: 100%;
+            flex-direction: column; /* Stack logo and search on small screens */
+            gap: 10px;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- Header Styling --- */
-        header {
-            background-color: var(--header-bg);
-            color: var(--text-dark);
-            padding: 15px;
+        .logo-container {
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            position: sticky; 
-            top: 0;
-            z-index: 10;
         }
 
         .logo {
-            /* LOGO SIZE MODIFIED FROM 36PX TO 50PX */
-            width: 50px; 
-            height: 50px; 
-            border-radius: 50%;
-            object-fit: cover;
-            background-color: var(--primary-accent);
-            padding: 2px;
-        }
-
-        .title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        /* --- Chat Window --- */
-        .chat-window {
-            flex: 1;
-            padding: 20px 15px;
-            background-color: var(--chat-bg); 
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px; /* Reduced gap for sleekness */
-            scroll-behavior: smooth;
-            padding-bottom: 70px; 
-        }
-
-        /* --- Message Styling & Animation --- */
-        .message {
-            max-width: 85%; /* Slightly wider messages */
-            padding: 10px 14px;
-            border-radius: 16px; /* Uniformly rounded */
-            font-size: 14px;
-            line-height: 1.5;
-            animation: slideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation */
-        }
-
-        @keyframes slideIn {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .bot-msg {
-            background-color: var(--bot-bg); 
-            color: var(--text-dark);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px; 
-        }
-        /* Bot links */
-        .bot-msg a {
-            color: var(--primary-accent) !important;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .user-msg {
-            background-color: var(--user-bg); 
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-
-        /* --- Song Card Styling --- */
-        .song-card {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-            padding: 5px 0 0 0;
-        }
-
-        .song-cover {
-            width: 100%;
-            height: 110px; 
-            object-fit: cover;
-            border-radius: 6px;
-            background-color: #E5E7EB;
-        }
-
-        .song-info {
-            font-weight: 600;
-            font-size: 15px;
-            color: var(--text-dark);
-        }
-        
-        /* --- Controls --- */
-        .controls {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-            margin-top: 5px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 8px 10px;
-            border: none;
-            border-radius: 6px; 
-            cursor: pointer;
-            font-weight: 600;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            border-radius: 5px; /* Slight rounding for the logo */
+            background-color: #ffb300; /* Logo accent color */
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            font-size: 13px;
-            text-decoration: none;
-            transition: background-color 0.2s, transform 0.1s;
-        }
-        .btn:active {
-            transform: scale(0.98);
+            font-weight: 700;
         }
 
-        .play-btn {
-            background-color: var(--primary-accent);
-            color: white;
+        .app-title {
+            font-size: 1.5em;
+            font-weight: 600;
         }
-        .play-btn:hover { background-color: #6D28D9; }
 
-        .download-btn {
-            background-color: #E0E7FF;
-            color: var(--text-dark);
-            border: 1px solid #C4B5FD;
-        }
-        .download-btn:hover { background-color: #C4B5FD; }
-
-
-        /* --- Input Area Styling --- */
-        .input-area {
-            position: fixed; 
-            bottom: 0;
-            width: 100vw;
-            max-width: 400px; 
-            padding: 8px 10px;
-            background-color: var(--header-bg);
+        .search-bar-container {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); 
-            z-index: 10;
+            border: 1px solid #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            background-color: white;
+            width: 100%; 
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .input-box {
-            flex: 1;
-            padding: 12px 18px;
-            border-radius: 24px; 
-            border: 1px solid #D1D5DB;
+        .search-input {
+            flex-grow: 1;
+            padding: 8px 15px;
+            border: none;
             outline: none;
-            font-size: 14px;
-            background-color: #F9FAFB;
-            color: var(--text-dark);
-            transition: border-color 0.2s;
-        }
-        .input-box:focus {
-            border-color: var(--primary-accent);
-            background-color: #FFFFFF;
+            font-size: 1em;
+            color: #333;
         }
 
-        .send-btn {
-            background-color: var(--primary-accent);
+        .search-button {
+            background-color: #ffb300; /* Accent color for the button */
             color: white;
             border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            padding: 8px 15px;
             cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.2s;
+        }
+
+        .search-button:hover {
+            background-color: #ffa000;
+        }
+
+        /* --- Content Grid Section --- */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .music-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: transform 0.2s, opacity 0.3s;
+        }
+
+        .music-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .cover-art {
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            /* Placeholder styling */
+            background-color: #ccc;
+        }
+
+        .cover-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            aspect-ratio: 1 / 1; 
+            object-fit: cover;
+        }
+
+        .card-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .song-title {
+            font-weight: 600;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+
+        /* Control Buttons Styling */
+        .control-button {
+            background-color: #1e88e5;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            cursor: pointer;
+            font-size: 1.1em;
+            padding: 0;
             transition: background-color 0.2s, transform 0.1s;
         }
-        .send-btn:active {
-            transform: scale(0.9);
-        }
-        .send-btn:hover { background-color: #6D28D9; }
         
-        .avb-header{
-           color: var(--primary-accent); 
-           margin: 0;
-           font-weight: 700;
-           font-size: 15px;
+        .control-button:active {
+            transform: scale(0.95);
         }
-        .avb-list-p {
-            margin-top: 5px;
-            font-weight: 500;
-            color: var(--text-dark);
-            line-height: 1.7;
+
+        .play-button {
+            background-color: #ffb300; /* Highlight play button */
+            font-size: 0.9em;
+        }
+
+        .download-button {
+            background-color: #28a745; /* Green for download */
+            font-size: 0.9em;
+        }
+
+        /* --- Message Box / Modal Styling --- */
+        .message-box-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .message-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            text-align: center;
+            animation: fadeIn 0.3s;
+        }
+        
+        .message-box h3 {
+            margin-top: 0;
+            color: #1e88e5;
+        }
+        
+        .message-box button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #ffb300;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .message-box button:hover {
+            background-color: #ffa000;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Media Query for larger screens (e.g., tablets/desktops) */
+        @media (min-width: 600px) {
+            .app-header {
+                flex-direction: row; /* Horizontal layout for header elements */
+                justify-content: space-between;
+                align-items: center;
+            }
+            .search-bar-container {
+                width: 300px; /* Limit search bar width */
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <header>
-            <img src="logo.jpg" alt="Logo" class="logo" onerror="this.src='https://via.placeholder.com/50?text=M'">
-            <div class="title">A One Music Bot</div>
-        </header>
-
-        <div class="chat-window" id="chatWindow">
-            <div class="message bot-msg">
-                👋 Welcome! I'm the A One Music Bot. Search for a song by typing its name, or click the **💾** button for a list of available tracks.
-            </div>
-            <div class="message bot-msg">
-                Follow us on Instagram: <a href="https://www.instagram.com/a.one.code.official?igsh=MTl5Zm9heGo4dW9ndA==" target="_blank" style="text-decoration: none;">A One Code official</a>.  
-            </div>
+    <header class="app-header">
+        <div class="logo-container">
+            <div class="logo" style="font-size: 12px;">NM</div>
+            <span class="app-title">Node Music</span>
         </div>
         
-        <div class="input-area">
-            <button id="showSongsBtn" class="send-btn" style="background-color: #6B7280;">💾</button> 
-            
-            <input type="text" id="userInput" class="input-box" placeholder="Send Song name...">
-            <button id="sendBtn" class="send-btn">➤</button>
+        <div class="search-bar-container">
+            <input type="text" id="searchInput" placeholder="Search for songs or artists" class="search-input">
+            <button class="search-button">
+                &#128269; <!-- Search icon -->
+            </button>
+        </div>
+    </header>
+
+    <!-- The music cards will be dynamically inserted here by JavaScript -->
+    <main class="content-grid" id="musicGrid"></main>
+
+    <!-- Message Box / Modal Structure -->
+    <div class="message-box-overlay" id="messageBoxOverlay">
+        <div class="message-box">
+            <h3 id="messageBoxTitle">Now Playing</h3>
+            <p id="messageBoxContent"></p>
+            <button id="messageBoxClose">Close</button>
         </div>
     </div>
 
     <script>
-        /* ========================================
-        --- JAVASCRIPT LOGIC --- 
-        ========================================
-        */
-        const userInput = document.getElementById("userInput");
-        const sendBtn = document.getElementById("sendBtn");
-        const chatWindow = document.getElementById("chatWindow");
-        const showSongsBtn = document.getElementById("showSongsBtn"); 
+        // Data structure containing all 15 songs
+        const songs = [
+            { title: "Ilakozhiye", coverFile: "to.jpg", audioFile: "Ilakozhiye.mp3" },
+            { title: "Nera", coverFile: "to.jpg", audioFile: "Nera.mp3" },
+            { title: "Shariya", coverFile: "shariya.jpg", audioFile: "shariya.mp3" },
+            { title: "Hope Song", coverFile: "hope.jpg", audioFile: "hope_song.mp3" },
+            { title: "Jaalakaari", coverFile: "jaalakaari.jpg", audioFile: "jaalakaari.mp3" },
+            { title: "Kaadhal Ponmaan", coverFile: "kaadhal_ponmaan.jpg", audioFile: "kaadhal_ponmaan.mp3" },
+            { title: "Kannukulla", coverFile: "kannukulla.jpg", audioFile: "kannukulla.mp3" },
+            { title: "Kozhipunk", coverFile: "kozhipunk.jpg", audioFile: "kozhipunk.mp3" },
+            { title: "Madhuramoorunna", coverFile: "madhuramoorunna.jpg", audioFile: "madhuramoorunna.mp3" },
+            { title: "Maine Pyar Kiya", coverFile: "maine.jpg", audioFile: "maine-pyar-kiya.mp3" },
+            { title: "Mhr Munthirichar", coverFile: "mhr.jpg", audioFile: "mhr_munthirichar.mp3" },
+            { title: "Neeyorikkal", coverFile: "neeyorikkal.jpg", audioFile: "neeyorikkal.mp3" },
+            { title: "Oorum Blood", coverFile: "oorum-blood.jpg", audioFile: "oorum-blood.mp3" },
+            { title: "Pemari", coverFile: "pemari.jpg", audioFile: "pemari.mp3" },
+            { title: "Permaani", coverFile: "permaani.jpg", audioFile: "permaani.mp3" },
+        ];
         
-        let currentAudio = null; 
-        let currentBtn = null;    
+        // Function to create the HTML for a single music card
+        const createMusicCard = (song, index) => {
+            // Use a specific placeholder image for visual appeal and to confirm the cover file name
+            const placeholderColor = ['007bff', '28a745', 'ffc107', 'dc3545', '6f42c1', '17a2b8'][index % 6];
+            const placeholderText = encodeURIComponent(song.title);
+            const coverSrc = `https://placehold.co/150x150/${placeholderColor}/ffffff?text=${placeholderText}`;
 
-        /**
-         * Available Song Database. 
-         */
-        const songData = {
-            "nera": { displayName: "Nera", imageName: "Nera.jpg", audioFileName: "Nera.mp3" },
-            "mhr munthirichar": { displayName: "Mhr Munthirichar", imageName: "mhr_munthirichar.jpg", audioFileName: "mhr_munthirichar.mp3" },
-            "salam": { displayName: "Salam", imageName: "salam.jpg", audioFileName: "Salam.mp3" },
-            "shariya": { displayName: "Shariya", imageName: "Shariya.jpg", audioFileName: "Shariya.mp3" }, 
-            "hope": { displayName: "Hope Song", imageName: "hope.jpg", audioFileName: "hope_song.mp3" }, 
-            "ilakozhiye": { displayName: "Ilakozhiye", imageName: "Ilakozhiye.jpg", audioFileName: "Ilakozhiye.mp3"},
-            "jaalakaari": { displayName: "Jaalakaari", imageName: "jaalakaari.jpg", audioFileName: "jaalakaari.mp3"},
-            "kaadhal ponmaan": { displayName: "Kaadhal Ponmaan", imageName: "kaadhal_ponmaan.jpg", audioFileName: "kaadhal_ponmaan.mp3"},
-            "kannukulla": { displayName: "Kannukulla", imageName: "kannukulla.jpg", audioFileName: "kannukulla.mp3"},
-            "kozhipunk": { displayName: "Kozhipunk", imageName: "kozhipunk.jpg", audioFileName: "kozhipunk.mp3"},
-            "madhuramoorunna": { displayName: "Madhuramoorunna", imageName: "madhuramoorunna.jpg", audioFileName: "madhuramoorunna.mp3"},
-            "maine pyar kiya": { displayName: "Maine Pyar Kiya", imageName: "maine.jpg", audioFileName: "maine-pyar-kiya.mp3"},
-            "naalo unna parema nantha": { displayName: "Naalo Unna Parema Nantha", imageName: "naalo.jpg", audioFileName: "naalo-unna-parema-nantha.mp3"},
-            "neeyorikkal": { displayName: "Neeyorikkal", imageName: "neeyorikkal.jpg", audioFileName: "neeyorikkal.mp3"},
-            "oorum blood": { displayName: "Oorum Blood", imageName: "oorum-blood.jpg", audioFileName: "oorum-blood.mp3"},
-            "pemari": { displayName: "Pemari", imageName: "pemari.jpg", audioFileName: "pemari.mp3"},
-            "permaani": { displayName: "Permaani", imageName: "permaani.jpg", audioFileName: "permaani.mp3"},
-            "minnalvala": { displayName: "Minnalvala", imageName: "minnalvala.jpg", audioFileName: "minnalvala.mp3"},
-            "singari": { displayName: "Singari", imageName: "singari.jpg", audioFileName: "singari.mp3"},
-            "thani lokah murakkaari": { displayName: "Thani Lokah Murakkaari", imageName: "thani-lokah-murakkaari.jpg", audioFileName: "thani-lokah-murakkaari.mp3"},
-            
-                };
-        
-        /**
-         * Calculates similarity between two strings (simple approach).
-         */
-        function calculateSimilarity(str1, str2) {
-            if (!str1 || !str2) return 0;
+            const card = document.createElement('div');
+            card.classList.add('music-card');
+            card.dataset.songTitle = song.title; // Data attribute for searching
+            card.innerHTML = `
+                <div class="cover-art">
+                    <img 
+                        src="${coverSrc}" 
+                        alt="Album Cover - ${song.title} (${song.coverFile})" 
+                        class="cover-image"
+                        onerror="this.onerror=null; this.src='https://placehold.co/150x150/888888/ffffff?text=Error'"
+                    >
+                </div>
+                <div class="card-controls">
+                    <!-- Play Button -->
+                    <button 
+                        class="play-button control-button" 
+                        aria-label="Play ${song.title}"
+                        data-action="play"
+                        data-file-name="${song.audioFile}"
+                        data-song-title="${song.title}"
+                    >&#9654;</button>
 
-            const len1 = str1.length;
-            const len2 = str2.length;
-            const maxLen = Math.max(len1, len2);
-            
-            if (str1 === str2) return 1.0; 
+                    <!-- NEW Download Button -->
+                    <button 
+                        class="download-button control-button" 
+                        aria-label="Download ${song.title}"
+                        data-action="download"
+                        data-file-name="${song.audioFile}"
+                        data-song-title="${song.title}"
+                    >&#8681;</button> 
 
-            let correctChars = 0;
-            for (let i = 0; i < Math.min(len1, len2); i++) {
-                if (str1.toLowerCase()[i] === str2.toLowerCase()[i]) {
-                    correctChars++;
-                }
-            }
-            
-            return correctChars / maxLen; 
-        }
-
-        // Function to send a message
-        function sendMessage() {
-            const text = userInput.value.trim();
-
-            if (text === "") return;
-
-            // 1. Add User message
-            addMessage(text, 'user-msg');
-            
-            userInput.value = "";
-
-            // 2. Bot Logic after a small delay
-            setTimeout(() => {
-                const lowerText = text.toLowerCase();
-                
-                let bestMatchSong = null;
-                let highestSimilarity = 0;
-                
-                const SIMILARITY_THRESHOLD = 0.10; 
-
-                // Search through all songs
-                for (const keyword in songData) {
-                    const similarity = calculateSimilarity(lowerText, keyword);
-
-                    if (similarity > highestSimilarity) {
-                        highestSimilarity = similarity;
-                        bestMatchSong = songData[keyword];
-                    }
-                }
-
-                // 3. Check threshold
-                if (bestMatchSong && highestSimilarity >= SIMILARITY_THRESHOLD) {
-                    addMessage(`I found a match for your song: ${bestMatchSong.displayName}`, 'bot-msg');
-                    
-                    // Send Song Card
-                    addSongCard(bestMatchSong.displayName, bestMatchSong.imageName, bestMatchSong.audioFileName);
-                } 
-                else {
-                    addMessage(`❌ Sorry, the song "${text}" is not found. Please try again or click 💾 for the list.`, 'bot-msg');
-                }
-            }, 600);
-        }
-
-        // Function to add a text message
-        function addMessage(text, className) {
-            const div = document.createElement("div");
-            div.classList.add("message", className);
-            div.innerHTML = text; 
-            chatWindow.appendChild(div);
-            scrollToBottom();
-        }
-        
-        // Function to add a Song Card
-        function addSongCard(displayName, imageName, audioFileName) {
-            const div = document.createElement("div");
-            div.classList.add("message", "bot-msg");
-            
-            const songUrl = audioFileName; 
-
-            div.innerHTML = `
-                <div class="song-card">
-                    <img src="${imageName}" class="song-cover" onerror="this.src='https://via.placeholder.com/200x110/D1D5DB/1F2937?text=No+Image'">
-                    <div class="song-info">🎵 ${displayName}</div>
-                    <div class="controls">
-                        <button class="btn play-btn" onclick="toggleMusic('${songUrl}', this)">▶ Play</button>
-                        <a href="${songUrl}" download="${displayName.replace(/\s/g, '_')}.mp3" class="btn download-btn">⬇️ Download</a>
-                    </div>
+                    <p class="song-title">${song.title}</p>
                 </div>
             `;
-            
-            chatWindow.appendChild(div);
-            scrollToBottom();
-        }
+            return card;
+        };
 
-        /**
-         * Function to toggle Play/Pause.
-         */
-        function toggleMusic(url, btnElement) {
-            
-            const newUrl = new URL(url, document.baseURI).href; 
+        // Function to render all music cards
+        const renderMusicGrid = () => {
+            const musicGrid = document.getElementById('musicGrid');
+            musicGrid.innerHTML = ''; // Clear existing content
+            songs.forEach((song, index) => {
+                const card = createMusicCard(song, index);
+                musicGrid.appendChild(card);
+            });
+        };
 
-            // 1. If the same song is playing, pause it
-            const isSameSongPlaying = currentAudio && 
-                                      !currentAudio.paused && 
-                                      currentAudio.src === newUrl;
 
-            if (isSameSongPlaying) {
-                currentAudio.pause();
-                btnElement.innerHTML = "▶ Play";
-                return;
-            }
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMusicGrid(); // Render all cards on load
 
-            // 2. Stop currently playing audio
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-            }
-            
-            // 3. Reset the text of the previously active button
-            if (currentBtn && currentBtn !== btnElement) {
-                currentBtn.innerHTML = "▶ Play";
-            }
+            const searchInput = document.getElementById('searchInput');
+            const musicGrid = document.getElementById('musicGrid');
+            const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+            const messageBoxContent = document.getElementById('messageBoxContent');
+            const messageBoxClose = document.getElementById('messageBoxClose');
 
-            // 4. Play new audio
-            currentAudio = new Audio(url);
-            currentBtn = btnElement;
+            // --- Search Functionality ---
+            const filterMusic = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const allCards = document.querySelectorAll('.music-card');
 
-            currentAudio.play()
-                .then(() => {
-                    btnElement.innerHTML = "⏸ Pause"; 
-                })
-                .catch(error => {
-                    console.error("Playback failed for:", url, error);
-                    alert(`Error: Cannot play "${url}". Make sure the file exists.`);
-                    btnElement.innerHTML = "▶ Play";
-                    currentAudio = null;
-                    currentBtn = null;
+                allCards.forEach(card => {
+                    const songTitle = card.dataset.songTitle.toLowerCase();
+                    
+                    if (songTitle.includes(searchTerm)) {
+                        card.style.display = 'block'; 
+                    } else {
+                        card.style.display = 'none';
+                    }
                 });
-
-            // 5. Reset button when song ends
-            currentAudio.onended = function() {
-                btnElement.innerHTML = "▶ Play";
-                currentAudio = null;
-                currentBtn = null;
             };
-        }
 
-        // Function to list Available Songs
-        function listAllSongs() {
-            // NOTE: Removed "**" from this list as requested
-            const songList = Object.keys(songData)
-                .map((key, index) => `${index + 1}. ${songData[key].displayName} (Keywords: ${key})`)
-                .join('<br>'); 
+            // Attach the search event listener
+            searchInput.addEventListener('input', filterMusic);
+
+            // --- Play/Download Message Box Functionality ---
+
+            // Function to show the custom message box
+            const showMessageBox = (title, content) => {
+                document.getElementById('messageBoxTitle').textContent = title;
+                messageBoxContent.innerHTML = content;
+                messageBoxOverlay.style.display = 'flex';
+            };
+
+            // Function to hide the custom message box
+            const hideMessageBox = () => {
+                messageBoxOverlay.style.display = 'none';
+            };
+
+            // Event listener for the close button
+            messageBoxClose.addEventListener('click', hideMessageBox);
             
-            addMessage(`<div class="avb-header">Available Songs</div> <p class="avb-list-p">(${Object.keys(songData).length} total):<br><br>${songList}</p>`, 'bot-msg');
-        }
+            // Event delegation for control buttons
+            musicGrid.addEventListener('click', (event) => {
+                const target = event.target.closest('.control-button');
+                
+                if (target) {
+                    const action = target.dataset.action;
+                    const songTitle = target.dataset.songTitle;
+                    const fileName = target.dataset.fileName;
 
-
-        // Function to scroll chat window to bottom
-        function scrollToBottom() {
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-        }
-
-        // Event Listeners
-        sendBtn.addEventListener("click", sendMessage);
-        showSongsBtn.addEventListener("click", listAllSongs); 
-
-        userInput.addEventListener("keypress", function (e) {
-            if (e.key === "Enter") {
-                sendMessage();
-            }
+                    if (action === 'play') {
+                        const content = `
+                            <p><strong>${songTitle}</strong> is now simulating playback.</p>
+                            <p style="color: #dc3545; font-size: 0.9em;">
+                                (Actual file: <code>${fileName}</code> cannot be played as local files are inaccessible.)
+                            </p>
+                        `;
+                        showMessageBox('Now Playing', content);
+                    } else if (action === 'download') {
+                        const content = `
+                            <p>You have successfully simulated the download of:</p>
+                            <p><strong>${songTitle}</strong> (File: <code>${fileName}</code>)</p>
+                            <p style="color: #1e88e5; font-size: 0.9em;">
+                                (In a real app, this would initiate the download of <code>${fileName}</code>.)
+                            </p>
+                        `;
+                        showMessageBox('Download Initiated', content);
+                    }
+                }
+            });
         });
-        
-        // Scroll to bottom on page load
-        window.addEventListener('load', scrollToBottom);
-
     </script>
 
 </body>
 </html>
+
