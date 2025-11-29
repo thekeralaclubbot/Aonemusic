@@ -7,7 +7,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body{font-family:'Poppins',sans-serif;margin:0;padding:0;background:#f4f7fa;padding-bottom:70px;color:#333}
+body{
+  font-family:'Poppins',sans-serif;margin:0;padding:0;
+  background:#f4f7fa;padding-bottom:70px;color:#333;
+}
 
 /* HEADER */
 .app-header{
@@ -18,12 +21,15 @@ body{font-family:'Poppins',sans-serif;margin:0;padding:0;background:#f4f7fa;padd
   box-shadow:0 4px 6px rgba(0,0,0,.1)
 }
 
+/* FIXED LOGO */
 .logo-img{
-  width:40px;
-  height:40px;
-  border-radius:8px;
+  width:65px;               
+  height:65px;               
+  border-radius:10px;
   margin-right:10px;
-  object-fit:cover;
+  object-fit:contain;        /* full logo visible */
+  background:#fff;
+  padding:3px;
 }
 
 /* SEARCH BAR */
@@ -31,17 +37,25 @@ body{font-family:'Poppins',sans-serif;margin:0;padding:0;background:#f4f7fa;padd
   display:flex;border:1px solid #fff;background:#fff;
   border-radius:20px;overflow:hidden
 }
-.search-input{flex-grow:1;padding:8px 15px;border:none;outline:none}
-.search-button{background:#ffb300;color:#fff;border:none;padding:8px 15px;cursor:pointer}
+.search-input{
+  flex-grow:1;padding:8px 15px;border:none;outline:none
+}
+.search-button{
+  background:#ffb300;color:#fff;border:none;padding:8px 15px;cursor:pointer
+}
 
-/* ADS */
+/* ADS (FIXED SIZE) */
 .ad-section{padding:20px}
 .ad-banner{
-  width:100%;height:120px;border-radius:12px;
-  background-size:cover;background-position:center;
+  width:100%;
+  max-width:100%;
+  height:150px;                 /* fixed perfect height */
+  border-radius:12px;
+  background-size:cover;
+  background-position:center;
   display:flex;align-items:center;justify-content:center;
   font-size:1.4em;color:#fff;font-weight:700;
-  transition:opacity .4s;overflow:hidden
+  overflow:hidden;
 }
 
 /* MUSIC GRID */
@@ -53,11 +67,15 @@ body{font-family:'Poppins',sans-serif;margin:0;padding:0;background:#f4f7fa;padd
   background:#fff;border-radius:10px;padding:15px;
   box-shadow:0 4px 8px rgba(0,0,0,.1)
 }
-.cover-art img{width:100%;border-radius:10px;object-fit:cover;height:180px}
-.card-controls{margin-top:10px;display:flex;align-items:center;gap:10px}
+.cover-art img{
+  width:100%;border-radius:10px;object-fit:cover;height:180px
+}
+.card-controls{
+  margin-top:10px;display:flex;align-items:center;gap:10px
+}
 .control-button{
-  width:32px;height:32px;border-radius:50%;
-  border:none;cursor:pointer;font-size:1.1em;
+  width:36px;height:36px;border-radius:50%;
+  border:none;cursor:pointer;font-size:1.2em;
   display:flex;align-items:center;justify-content:center
 }
 .play-button{background:#ffb300;color:#fff}
@@ -75,6 +93,17 @@ body{font-family:'Poppins',sans-serif;margin:0;padding:0;background:#f4f7fa;padd
 .np-cover{
   width:40px;height:40px;background:#ffb300;margin-right:10px;
   border-radius:5px;display:flex;align-items:center;justify-content:center
+}
+
+/* Pause Button Design */
+.pause-btn{
+  background:#ffb300;
+  color:#fff;
+  border:none;
+  border-radius:50%;
+  width:35px;height:35px;
+  font-size:1.3em;
+  margin-left:10px;
 }
 </style>
 </head>
@@ -104,7 +133,12 @@ body{font-family:'Poppins',sans-serif;margin:0;padding:0;background:#f4f7fa;padd
 <div id="nowPlayingBar" class="now-playing-bar">
   <div class="np-cover">🎵</div>
   <div id="npTitle"></div>
-  <button id="stopBtn" style="margin-left:auto;background:#dc3545;color:white;border:none;border-radius:50%;width:35px;height:35px;font-size:1.3em">⏹</button>
+
+  <button id="pauseBtn" class="pause-btn">⏸</button>
+
+  <button id="stopBtn"
+    style="margin-left:10px;background:#dc3545;color:white;border:none;border-radius:50%;
+    width:35px;height:35px;font-size:1.3em">⏹</button>
 </div>
 
 <audio id="audioPlayer"></audio>
@@ -156,6 +190,8 @@ function renderMusicGrid() {
   songs.forEach(song => grid.appendChild(createMusicCard(song)));
 }
 
+let isPaused = false;
+
 /* PLAY SONG */
 function playSong(file, title) {
   const audio = document.getElementById("audioPlayer");
@@ -164,7 +200,25 @@ function playSong(file, title) {
 
   document.getElementById("npTitle").textContent = title;
   document.getElementById("nowPlayingBar").classList.add("visible");
+
+  isPaused = false;
+  document.getElementById("pauseBtn").innerHTML = "⏸";
 }
+
+/* PAUSE/RESUME */
+document.getElementById("pauseBtn").onclick = () => {
+  const audio = document.getElementById("audioPlayer");
+
+  if (isPaused) {
+    audio.play();
+    document.getElementById("pauseBtn").innerHTML = "⏸";
+    isPaused = false;
+  } else {
+    audio.pause();
+    document.getElementById("pauseBtn").innerHTML = "▶";
+    isPaused = true;
+  }
+};
 
 /* STOP MUSIC */
 document.getElementById("stopBtn").onclick = () => {
@@ -209,7 +263,7 @@ function rotateAds() {
   document.getElementById("adText").textContent = ad.title;
   currentAd = (currentAd + 1) % ads.length;
 }
-setInterval(rotateAds, 2000);
+setInterval(rotateAds, 2500);
 
 /* INIT */
 document.addEventListener("DOMContentLoaded", () => {
