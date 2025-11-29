@@ -21,15 +21,15 @@ body{
   box-shadow:0 4px 6px rgba(0,0,0,.1)
 }
 
-/* FIXED LOGO */
+/* 📌 FIXED FULL LOGO VISIBLE */
 .logo-img{
-  width:65px;               
-  height:65px;               
-  border-radius:10px;
-  margin-right:10px;
-  object-fit:contain;        /* full logo visible */
-  background:#fff;
-  padding:3px;
+  width:70px;
+  height:70px;
+  object-fit:contain;     /* FULL LOGO SHOW */
+  background:white;
+  border-radius:12px;
+  padding:5px;
+  margin-right:12px;
 }
 
 /* SEARCH BAR */
@@ -44,12 +44,12 @@ body{
   background:#ffb300;color:#fff;border:none;padding:8px 15px;cursor:pointer
 }
 
-/* ADS (FIXED SIZE) */
+/* ADS */
 .ad-section{padding:20px}
 .ad-banner{
   width:100%;
   max-width:100%;
-  height:150px;                 /* fixed perfect height */
+  height:150px;
   border-radius:12px;
   background-size:cover;
   background-position:center;
@@ -95,7 +95,7 @@ body{
   border-radius:5px;display:flex;align-items:center;justify-content:center
 }
 
-/* Pause Button Design */
+/* Pause Button */
 .pause-btn{
   background:#ffb300;
   color:#fff;
@@ -190,9 +190,9 @@ function renderMusicGrid() {
   songs.forEach(song => grid.appendChild(createMusicCard(song)));
 }
 
+/* PLAY SONG */
 let isPaused = false;
 
-/* PLAY SONG */
 function playSong(file, title) {
   const audio = document.getElementById("audioPlayer");
   audio.src = file;
@@ -205,7 +205,7 @@ function playSong(file, title) {
   document.getElementById("pauseBtn").innerHTML = "⏸";
 }
 
-/* PAUSE/RESUME */
+/* PAUSE / RESUME */
 document.getElementById("pauseBtn").onclick = () => {
   const audio = document.getElementById("audioPlayer");
 
@@ -220,7 +220,7 @@ document.getElementById("pauseBtn").onclick = () => {
   }
 };
 
-/* STOP MUSIC */
+/* STOP */
 document.getElementById("stopBtn").onclick = () => {
   const audio = document.getElementById("audioPlayer");
   audio.pause();
@@ -228,7 +228,7 @@ document.getElementById("stopBtn").onclick = () => {
   document.getElementById("nowPlayingBar").classList.remove("visible");
 };
 
-/* BUTTON CLICK HANDLER */
+/* ACTIONS */
 document.addEventListener("click", (e) => {
   const btn = e.target.closest(".control-button");
   if (!btn) return;
@@ -236,9 +236,7 @@ document.addEventListener("click", (e) => {
   const file = btn.dataset.audio;
   const title = btn.dataset.title;
 
-  if (btn.classList.contains("play-button")) {
-    playSong(file, title);
-  }
+  if (btn.classList.contains("play-button")) playSong(file, title);
 
   if (btn.classList.contains("download-button")) {
     const a = document.createElement("a");
