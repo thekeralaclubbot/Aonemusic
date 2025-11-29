@@ -1,406 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Node Music</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* Basic Reset */
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f7fa; /* Light background */
-            color: #333;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Node Music</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-        /* --- Header Section --- */
-        .app-header {
-            background-color: #1e88e5; /* A vibrant blue color */
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            flex-direction: column; 
-            gap: 10px;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+<style>
+/* BASIC RESET */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f7fa;
+  color: #333;
+  padding-bottom: 70px;
+}
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
+/* HEADER */
+.app-header {
+  background-color: #1e88e5;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 
-        .logo {
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
-            border-radius: 5px; 
-            background-color: #ffb300; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
+.logo-container {
+  display: flex;
+  align-items: center;
+}
 
-        .app-title {
-            font-size: 1.5em;
-            font-weight: 600;
-        }
+.logo {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 5px;
+  background-color: #ffb300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
 
-        .search-bar-container {
-            display: flex;
-            border: 1px solid #fff;
-            border-radius: 20px;
-            overflow: hidden;
-            background-color: white;
-            width: 100%; 
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+.app-title {
+  font-size: 1.5em;
+  font-weight: 600;
+}
 
-        .search-input {
-            flex-grow: 1;
-            padding: 8px 15px;
-            border: none;
-            outline: none;
-            font-size: 1em;
-            color: #333;
-        }
+.search-bar-container {
+  display: flex;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: white;
+  width: 100%;
+}
 
-        .search-button {
-            background-color: #ffb300; 
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-size: 1.1em;
-            transition: background-color 0.2s;
-        }
+.search-input {
+  flex-grow: 1;
+  padding: 8px 15px;
+  border: none;
+  outline: none;
+  font-size: 1em;
+}
 
-        .search-button:hover {
-            background-color: #ffa000;
-        }
-        
-        /* --- Ad Banner Section --- */
-        .ad-section {
-            padding: 20px 20px 0 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+.search-button {
+  background-color: #ffb300;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 1.2em;
+}
 
-        .ad-banner {
-            width: 100%;
-            height: 150px;
-            background-size: cover;
-            background-position: center;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5em;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
-            /* Animation Transition for the move effect (simple opacity/scale change) */
-            transition: background-image 0.5s ease-in-out, opacity 0.5s ease, transform 0.3s;
-            opacity: 1;
-        }
-        
-        .ad-text-overlay {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 10px 20px;
-            border-radius: 8px;
-        }
+/* AD SECTION */
+.ad-section { padding: 20px; }
+.ad-banner {
+  width: 100%;
+  height: 150px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4em;
+  color: white;
+  font-weight: 700;
+  transition: opacity .4s;
+}
 
-        /* --- Content Grid Section (Music Cards) --- */
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+.ad-text-overlay {
+  background: rgba(0,0,0,.4);
+  padding: 8px 20px;
+  border-radius: 8px;
+}
 
-        .music-card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            transition: transform 0.2s, opacity 0.3s;
-        }
+/* MUSIC CARDS */
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+  gap: 20px;
+  padding: 20px;
+}
 
-        .music-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
+.music-card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,.1);
+  transition: transform .2s;
+}
 
-        .cover-art {
-            margin-bottom: 10px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            background-color: #ccc;
-        }
+.music-card:hover { transform: translateY(-5px); }
 
-        .cover-image {
-            width: 100%;
-            height: auto;
-            display: block;
-            aspect-ratio: 1 / 1; 
-            object-fit: cover;
-        }
+.cover-art img {
+  width: 100%;
+  border-radius: 10px;
+}
 
-        .card-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
+.card-controls {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-        .song-title {
-            font-weight: 600;
-            margin: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex-grow: 1;
-        }
+.control-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-        /* Control Buttons Styling */
-        .control-button {
-            background-color: #1e88e5;
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.1em;
-            padding: 0;
-            transition: background-color 0.2s, transform 0.1s;
-        }
-        
-        .control-button:active {
-            transform: scale(0.85); /* Stronger feedback instead of error popup */
-        }
+.play-button { background: #ffb300; color: white; }
+.download-button { background: #28a745; color: white; }
 
-        .play-button {
-            background-color: #ffb300; 
-            font-size: 0.9em;
-        }
+.song-title {
+  flex-grow: 1;
+  font-weight: 600;
+}
 
-        .download-button {
-            background-color: #28a745; 
-            font-size: 0.9em;
-        }
+/* NOW PLAYING BAR */
+.now-playing-bar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background: #333;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  transform: translateY(100%);
+  transition: transform .3s;
+}
 
-        /* Media Query for larger screens (e.g., tablets/desktops) */
-        @media (min-width: 600px) {
-            .app-header {
-                flex-direction: row; 
-                justify-content: space-between;
-                align-items: center;
-            }
-            .search-bar-container {
-                width: 300px; 
-            }
-        }
-    </style>
+.now-playing-bar.visible {
+  transform: translateY(0);
+}
+
+.np-details {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.np-cover {
+  width: 40px;
+  height: 40px;
+  background: #ffb300;
+  margin-right: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+</style>
 </head>
 <body>
 
-    <header class="app-header">
-        <div class="logo-container">
-            <div class="logo" style="font-size: 12px;">NM</div>
-            <span class="app-title">Node Music</span>
-        </div>
-        
-        <div class="search-bar-container">
-            <input type="text" id="searchInput" placeholder="Search for songs or artists" class="search-input">
-            <button class="search-button">
-                &#128269; <!-- Search icon -->
-            </button>
-        </div>
-    </header>
-    
-    <!-- Ad Banner Section (Cycles ad1.jpg to ad6.jpg every 2 seconds) -->
-    <section class="ad-section">
-        <div id="adCarouselContainer" class="ad-banner">
-            <div id="adText" class="ad-text-overlay"></div>
-        </div>
-    </section>
+<!-- HEADER -->
+<header class="app-header">
+  <div class="logo-container">
+      <div class="logo">NM</div>
+      <span class="app-title">Node Music</span>
+  </div>
 
-    <!-- The music cards (songs only) will be dynamically inserted here by JavaScript -->
-    <main class="content-grid" id="musicGrid"></main>
+  <div class="search-bar-container">
+      <input id="searchInput" class="search-input" placeholder="Search songs...">
+      <button class="search-button">🔍</button>
+  </div>
+</header>
 
-    <script>
-        // Data structure containing all 15 songs
-        const songs = [
-            { title: "Ilakozhiye", coverFile: "to.jpg", audioFile: "Ilakozhiye.mp3" },
-            { title: "Nera", coverFile: "to.jpg", audioFile: "Nera.mp3" },
-            { title: "Shariya", coverFile: "shariya.jpg", audioFile: "shariya.mp3" },
-            { title: "Hope Song", coverFile: "hope.jpg", audioFile: "hope_song.mp3" },
-            { title: "Jaalakaari", coverFile: "jaalakaari.jpg", audioFile: "jaalakaari.mp3" },
-            { title: "Kaadhal Ponmaan", coverFile: "kaadhal_ponmaan.jpg", audioFile: "kaadhal_ponmaan.mp3" },
-            { title: "Kannukulla", coverFile: "kannukulla.jpg", audioFile: "kannukulla.mp3" },
-            { title: "Kozhipunk", coverFile: "kozhipunk.jpg", audioFile: "kozhipunk.mp3" },
-            { title: "Madhuramoorunna", coverFile: "madhuramoorunna.jpg", audioFile: "madhuramoorunna.mp3" },
-            { title: "Maine Pyar Kiya", coverFile: "maine.jpg", audioFile: "maine-pyar-kiya.mp3" },
-            { title: "Mhr Munthirichar", coverFile: "mhr.jpg", audioFile: "mhr_munthirichar.mp3" },
-            { title: "Neeyorikkal", coverFile: "neeyorikkal.jpg", audioFile: "neeyorikkal.mp3" },
-            { title: "Oorum Blood", coverFile: "oorum-blood.jpg", audioFile: "oorum-blood.mp3" },
-            { title: "Pemari", coverFile: "pemari.jpg", audioFile: "pemari.mp3" },
-            { title: "Permaani", coverFile: "permaani.jpg", audioFile: "permaani.mp3" },
-        ];
-        
-        // Data structure containing ad images
-        const ads = [
-            { title: "Ad 1: New Album Drop", coverFile: "ad1.jpg" },
-            { title: "Ad 2: Exclusive Concert Access", coverFile: "ad2.jpg" },
-            { title: "Ad 3: Upgrade to Premium", coverFile: "ad3.jpg" },
-            { title: "Ad 4: New Music Gear", coverFile: "ad4.jpg" },
-            { title: "Ad 5: Podcast Network", coverFile: "ad5.jpg" },
-            { title: "Ad 6: Annual Sale Event", coverFile: "ad6.jpg" },
-        ];
-        
-        let currentAdIndex = 0;
+<!-- ADS -->
+<section class="ad-section">
+  <div id="adCarouselContainer" class="ad-banner">
+      <div id="adText" class="ad-text-overlay"></div>
+  </div>
+</section>
 
-        // Function to create the HTML for a single music card
-        const createMusicCard = (song, index) => {
-            // Use a specific placeholder image for visual appeal
-            const placeholderColor = ['007bff', '28a745', 'ffc107', 'dc3545', '6f42c1', '17a2b8'][index % 6];
-            const placeholderText = encodeURIComponent(song.title);
-            const coverSrc = `https://placehold.co/150x150/${placeholderColor}/ffffff?text=${placeholderText}`;
+<!-- MUSIC GRID -->
+<main id="musicGrid" class="content-grid"></main>
 
-            const card = document.createElement('div');
-            card.classList.add('music-card');
-            card.dataset.songTitle = song.title; // Data attribute for searching
-            card.dataset.type = 'song';
-            card.innerHTML = `
-                <div class="cover-art">
-                    <img 
-                        src="${coverSrc}" 
-                        alt="Album Cover - ${song.title} (${song.coverFile})" 
-                        class="cover-image"
-                        onerror="this.onerror=null; this.src='https://placehold.co/150x150/888888/ffffff?text=Error'"
-                    >
-                </div>
-                <div class="card-controls">
-                    <!-- Play Button (Action removed - only visual feedback remains) -->
-                    <button 
-                        class="play-button control-button" 
-                        aria-label="Play ${song.title}"
-                        data-action="play"
-                        data-song-title="${song.title}"
-                    >&#9654;</button>
+<!-- NOW PLAYING BAR -->
+<div id="nowPlayingBar" class="now-playing-bar">
+  <div class="np-details">
+      <div class="np-cover">🎵</div>
+      <div>
+          <div id="npTitle" class="np-title"></div>
+          <div class="np-artist">Simulated Playback</div>
+      </div>
+  </div>
+  <button onclick="stopPlayback()" style="background:#dc3545;color:white;font-size:1.3em;border-radius:50%;width:35px;height:35px;">⏹</button>
+</div>
 
-                    <!-- Download Button (Action removed - only visual feedback remains) -->
-                    <button 
-                        class="download-button control-button" 
-                        aria-label="Download ${song.title}"
-                        data-action="download"
-                        data-song-title="${song.title}"
-                    >&#8681;</button> 
+<script>
+/* SONG LIST */
+const songs = [
+  { title: "Ilakozhiye", coverFile: "to.jpg", audioFile: "Ilakozhiye.mp3" },
+  { title: "Nera", coverFile: "to.jpg", audioFile: "Nera.mp3" },
+  { title: "Shariya", coverFile: "shariya.jpg", audioFile: "shariya.mp3" },
+  { title: "Hope Song", coverFile: "hope.jpg", audioFile: "hope_song.mp3" },
+  { title: "Jaalakaari", coverFile: "jaalakaari.jpg", audioFile: "jaalakaari.mp3" },
+  { title: "Kaadhal Ponmaan", coverFile: "kaadhal_ponmaan.jpg", audioFile: "kaadhal_ponmaan.mp3" },
+  { title: "Kannukulla", coverFile: "kannukulla.jpg", audioFile: "kannukulla.mp3" },
+  { title: "Kozhipunk", coverFile: "kozhipunk.jpg", audioFile: "kozhipunk.mp3" },
+  { title: "Madhuramoorunna", coverFile: "madhuramoorunna.jpg", audioFile: "madhuramoorunna.mp3" },
+  { title: "Maine Pyar Kiya", coverFile: "maine.jpg", audioFile: "maine-pyar-kiya.mp3" },
+  { title: "Mhr Munthirichar", coverFile: "mhr.jpg", audioFile: "mhr_munthirichar.mp3" },
+  { title: "Neeyorikkal", coverFile: "neeyorikkal.jpg", audioFile: "neeyorikkal.mp3" },
+  { title: "Oorum Blood", coverFile: "oorum-blood.jpg", audioFile: "oorum-blood.mp3" },
+  { title: "Pemari", coverFile: "pemari.jpg", audioFile: "pemari.mp3" },
+  { title: "Permaani", coverFile: "permaani.jpg", audioFile: "permaani.mp3" }
+];
 
-                    <p class="song-title">${song.title}</p>
-                </div>
-            `;
-            return card;
-        };
+/* ADS */
+const ads = [
+  { title: "Ad 1: New Album Drop",      file: "ad1.jpg" },
+  { title: "Ad 2: Exclusive Concert",   file: "ad2.jpg" },
+  { title: "Ad 3: Upgrade to Premium",  file: "ad3.jpg" },
+  { title: "Ad 4: Music Gear Offers",   file: "ad4.jpg" },
+  { title: "Ad 5: Podcast Network",     file: "ad5.jpg" },
+  { title: "Ad 6: Yearly Sale Event",   file: "ad6.jpg" }
+];
 
-        // Function to render all music cards
-        const renderMusicGrid = () => {
-            const musicGrid = document.getElementById('musicGrid');
-            musicGrid.innerHTML = ''; // Clear existing content
-            songs.forEach((song, index) => {
-                const card = createMusicCard(song, index);
-                musicGrid.appendChild(card);
-            });
-        };
-        
-        // Function to update the ad banner (cycles every 2 seconds)
-        const updateAdBanner = () => {
-            const adContainer = document.getElementById('adCarouselContainer');
-            const adText = document.getElementById('adText');
-            const ad = ads[currentAdIndex];
-            
-            // Use opacity 0 to hide it quickly before changing the background (the move animation)
-            adContainer.style.opacity = '0'; 
-            
-            setTimeout(() => {
-                // Use a placeholder image that shows the ad filename
-                const placeholderUrl = `https://placehold.co/800x150/ffb300/1e88e5?text=AD+DISPLAYING+${encodeURIComponent(ad.coverFile)}`;
-                
-                adContainer.style.backgroundImage = `url('${placeholderUrl}')`;
-                adText.textContent = ad.title;
-                adContainer.style.opacity = '1'; // Fade back in
+let currentAdIndex = 0;
+let audioContext = null;
+let oscillator = null;
 
-                // Move to the next ad
-                currentAdIndex = (currentAdIndex + 1) % ads.length;
-            }, 300); // Wait for fade-out transition
-        };
+/* RENDER SONG CARD */
+const createMusicCard = (song) => {
+  const card = document.createElement("div");
+  card.classList.add("music-card");
 
-        // Function to start the ad carousel
-        const startAdCarousel = () => {
-            // Run once immediately
-            updateAdBanner(); 
-            // Then run every 2 seconds (2000 milliseconds)
-            setInterval(updateAdBanner, 2000); 
-        };
+  card.innerHTML = `
+    <div class="cover-art">
+      <img src="${song.coverFile}" onerror="this.src='https://placehold.co/150x150?text=No+Image'">
+    </div>
 
+    <div class="card-controls">
+      <button class="control-button play-button" data-action="play" data-title="${song.title}">▶</button>
+      <button class="control-button download-button" data-action="download" data-title="${song.title}">⬇</button>
+      <p class="song-title">${song.title}</p>
+    </div>
+  `;
+  return card;
+};
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderMusicGrid(); // Render all song cards
-            startAdCarousel(); // Start the ad rotation
+/* RENDER GRID */
+const renderMusicGrid = () => {
+  const grid = document.getElementById("musicGrid");
+  grid.innerHTML = "";
+  songs.forEach(song => grid.appendChild(createMusicCard(song)));
+};
 
-            const searchInput = document.getElementById('searchInput');
-            const musicGrid = document.getElementById('musicGrid');
-            
-            // --- Search Functionality (Only filters music cards) ---
-            const filterMusic = () => {
-                const searchTerm = searchInput.value.toLowerCase();
-                // Select only elements that are songs
-                const allMusicCards = document.querySelectorAll('.music-card[data-type="song"]'); 
+/* AD CAROUSEL */
+const updateAdBanner = () => {
+  const ad = ads[currentAdIndex];
+  const banner = document.getElementById("adCarouselContainer");
+  const text = document.getElementById("adText");
 
-                allMusicCards.forEach(card => {
-                    const songTitle = card.dataset.songTitle.toLowerCase();
-                    
-                    if (songTitle.includes(searchTerm)) {
-                        card.style.display = 'block'; 
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            };
+  banner.style.opacity = "0";
+  setTimeout(() => {
+    banner.style.backgroundImage = `url('${ad.file}')`;
+    text.textContent = ad.title;
+    banner.style.opacity = "1";
+  }, 300);
 
-            // Attach the search event listener
-            searchInput.addEventListener('input', filterMusic);
+  currentAdIndex = (currentAdIndex + 1) % ads.length;
+};
 
-            // --- Control Button Feedback (No more error message) ---
-            musicGrid.addEventListener('click', (event) => {
-                const target = event.target.closest('.control-button');
-                
-                if (target) {
-                    const action = target.dataset.action;
-                    const songTitle = target.dataset.songTitle;
+setInterval(updateAdBanner, 2000);
 
-                    // Console log for debug, but no message box displayed to user
-                    console.log(`Action: ${action} triggered for song: ${songTitle}`);
-                    // The CSS active state handles the visual feedback (scale down)
-                }
-            });
-        });
-    </script>
+/* AUDIO SIMULATED PLAYBACK */
+const playTone = () => {
+  if (!audioContext) audioContext = new AudioContext();
+
+  oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+
+  oscillator.frequency.value = 520;
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + 0.5);
+};
+
+/* NOW PLAYING BAR */
+const startPlayback = (title) => {
+  document.getElementById("npTitle").textContent = title;
+  document.getElementById("nowPlayingBar").classList.add("visible");
+  playTone();
+};
+
+function stopPlayback() {
+  document.getElementById("nowPlayingBar").classList.remove("visible");
+  if (oscillator) oscillator.stop();
+}
+
+/* ENABLE AUDIO ON MOBILE CLICK */
+document.body.addEventListener("click", () => {
+  if (audioContext && audioContext.state === "suspended") audioContext.resume();
+}, { once: true });
+
+/* SEARCH */
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  const term = e.target.value.toLowerCase();
+  document.querySelectorAll(".music-card").forEach(card => {
+    card.style.display = card.innerText.toLowerCase().includes(term) ? "block" : "none";
+  });
+});
+
+/* BUTTON ACTIONS */
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".control-button");
+  if (!btn) return;
+
+  const action = btn.dataset.action;
+  const title = btn.dataset.title;
+  const song = songs.find(s => s.title === title);
+
+  if (action === "play") startPlayback(title);
+  if (action === "download") {
+    const a = document.createElement("a");
+    a.href = song.audioFile;
+    a.download = song.audioFile;
+    a.click();
+  }
+});
+
+/* INIT */
+document.addEventListener("DOMContentLoaded", () => {
+  renderMusicGrid();
+  updateAdBanner();
+});
+</script>
 
 </body>
 </html>
-
