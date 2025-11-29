@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Node Music</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* Basic Reset */
@@ -22,7 +22,7 @@
             color: white;
             padding: 15px 20px;
             display: flex;
-            flex-direction: column; /* Stack logo and search on small screens */
+            flex-direction: column; 
             gap: 10px;
             border-bottom-left-radius: 15px;
             border-bottom-right-radius: 15px;
@@ -38,8 +38,8 @@
             width: 30px;
             height: 30px;
             margin-right: 10px;
-            border-radius: 5px; /* Slight rounding for the logo */
-            background-color: #ffb300; /* Logo accent color */
+            border-radius: 5px; 
+            background-color: #ffb300; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -71,7 +71,7 @@
         }
 
         .search-button {
-            background-color: #ffb300; /* Accent color for the button */
+            background-color: #ffb300; 
             color: white;
             border: none;
             padding: 8px 15px;
@@ -83,8 +83,41 @@
         .search-button:hover {
             background-color: #ffa000;
         }
+        
+        /* --- Ad Banner Section --- */
+        .ad-section {
+            padding: 20px 20px 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-        /* --- Content Grid Section --- */
+        .ad-banner {
+            width: 100%;
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            /* Animation Transition for the move effect (simple opacity/scale change) */
+            transition: background-image 0.5s ease-in-out, opacity 0.5s ease, transform 0.3s;
+            opacity: 1;
+        }
+        
+        .ad-text-overlay {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        /* --- Content Grid Section (Music Cards) --- */
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
@@ -112,7 +145,6 @@
             position: relative;
             overflow: hidden;
             border-radius: 8px;
-            /* Placeholder styling */
             background-color: #ccc;
         }
 
@@ -158,78 +190,28 @@
         }
         
         .control-button:active {
-            transform: scale(0.95);
+            transform: scale(0.85); /* Stronger feedback instead of error popup */
         }
 
         .play-button {
-            background-color: #ffb300; /* Highlight play button */
+            background-color: #ffb300; 
             font-size: 0.9em;
         }
 
         .download-button {
-            background-color: #28a745; /* Green for download */
+            background-color: #28a745; 
             font-size: 0.9em;
-        }
-
-        /* --- Message Box / Modal Styling --- */
-        .message-box-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: none; /* Hidden by default */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .message-box {
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            max-width: 90%;
-            text-align: center;
-            animation: fadeIn 0.3s;
-        }
-        
-        .message-box h3 {
-            margin-top: 0;
-            color: #1e88e5;
-        }
-        
-        .message-box button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #ffb300;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.2s;
-        }
-
-        .message-box button:hover {
-            background-color: #ffa000;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
         }
 
         /* Media Query for larger screens (e.g., tablets/desktops) */
         @media (min-width: 600px) {
             .app-header {
-                flex-direction: row; /* Horizontal layout for header elements */
+                flex-direction: row; 
                 justify-content: space-between;
                 align-items: center;
             }
             .search-bar-container {
-                width: 300px; /* Limit search bar width */
+                width: 300px; 
             }
         }
     </style>
@@ -249,18 +231,16 @@
             </button>
         </div>
     </header>
-
-    <!-- The music cards will be dynamically inserted here by JavaScript -->
-    <main class="content-grid" id="musicGrid"></main>
-
-    <!-- Message Box / Modal Structure -->
-    <div class="message-box-overlay" id="messageBoxOverlay">
-        <div class="message-box">
-            <h3 id="messageBoxTitle">Now Playing</h3>
-            <p id="messageBoxContent"></p>
-            <button id="messageBoxClose">Close</button>
+    
+    <!-- Ad Banner Section (Cycles ad1.jpg to ad6.jpg every 2 seconds) -->
+    <section class="ad-section">
+        <div id="adCarouselContainer" class="ad-banner">
+            <div id="adText" class="ad-text-overlay"></div>
         </div>
-    </div>
+    </section>
+
+    <!-- The music cards (songs only) will be dynamically inserted here by JavaScript -->
+    <main class="content-grid" id="musicGrid"></main>
 
     <script>
         // Data structure containing all 15 songs
@@ -282,9 +262,21 @@
             { title: "Permaani", coverFile: "permaani.jpg", audioFile: "permaani.mp3" },
         ];
         
+        // Data structure containing ad images
+        const ads = [
+            { title: "Ad 1: New Album Drop", coverFile: "ad1.jpg" },
+            { title: "Ad 2: Exclusive Concert Access", coverFile: "ad2.jpg" },
+            { title: "Ad 3: Upgrade to Premium", coverFile: "ad3.jpg" },
+            { title: "Ad 4: New Music Gear", coverFile: "ad4.jpg" },
+            { title: "Ad 5: Podcast Network", coverFile: "ad5.jpg" },
+            { title: "Ad 6: Annual Sale Event", coverFile: "ad6.jpg" },
+        ];
+        
+        let currentAdIndex = 0;
+
         // Function to create the HTML for a single music card
         const createMusicCard = (song, index) => {
-            // Use a specific placeholder image for visual appeal and to confirm the cover file name
+            // Use a specific placeholder image for visual appeal
             const placeholderColor = ['007bff', '28a745', 'ffc107', 'dc3545', '6f42c1', '17a2b8'][index % 6];
             const placeholderText = encodeURIComponent(song.title);
             const coverSrc = `https://placehold.co/150x150/${placeholderColor}/ffffff?text=${placeholderText}`;
@@ -292,6 +284,7 @@
             const card = document.createElement('div');
             card.classList.add('music-card');
             card.dataset.songTitle = song.title; // Data attribute for searching
+            card.dataset.type = 'song';
             card.innerHTML = `
                 <div class="cover-art">
                     <img 
@@ -302,21 +295,19 @@
                     >
                 </div>
                 <div class="card-controls">
-                    <!-- Play Button -->
+                    <!-- Play Button (Action removed - only visual feedback remains) -->
                     <button 
                         class="play-button control-button" 
                         aria-label="Play ${song.title}"
                         data-action="play"
-                        data-file-name="${song.audioFile}"
                         data-song-title="${song.title}"
                     >&#9654;</button>
 
-                    <!-- NEW Download Button -->
+                    <!-- Download Button (Action removed - only visual feedback remains) -->
                     <button 
                         class="download-button control-button" 
                         aria-label="Download ${song.title}"
                         data-action="download"
-                        data-file-name="${song.audioFile}"
                         data-song-title="${song.title}"
                     >&#8681;</button> 
 
@@ -335,23 +326,52 @@
                 musicGrid.appendChild(card);
             });
         };
+        
+        // Function to update the ad banner (cycles every 2 seconds)
+        const updateAdBanner = () => {
+            const adContainer = document.getElementById('adCarouselContainer');
+            const adText = document.getElementById('adText');
+            const ad = ads[currentAdIndex];
+            
+            // Use opacity 0 to hide it quickly before changing the background (the move animation)
+            adContainer.style.opacity = '0'; 
+            
+            setTimeout(() => {
+                // Use a placeholder image that shows the ad filename
+                const placeholderUrl = `https://placehold.co/800x150/ffb300/1e88e5?text=AD+DISPLAYING+${encodeURIComponent(ad.coverFile)}`;
+                
+                adContainer.style.backgroundImage = `url('${placeholderUrl}')`;
+                adText.textContent = ad.title;
+                adContainer.style.opacity = '1'; // Fade back in
+
+                // Move to the next ad
+                currentAdIndex = (currentAdIndex + 1) % ads.length;
+            }, 300); // Wait for fade-out transition
+        };
+
+        // Function to start the ad carousel
+        const startAdCarousel = () => {
+            // Run once immediately
+            updateAdBanner(); 
+            // Then run every 2 seconds (2000 milliseconds)
+            setInterval(updateAdBanner, 2000); 
+        };
 
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderMusicGrid(); // Render all cards on load
+            renderMusicGrid(); // Render all song cards
+            startAdCarousel(); // Start the ad rotation
 
             const searchInput = document.getElementById('searchInput');
             const musicGrid = document.getElementById('musicGrid');
-            const messageBoxOverlay = document.getElementById('messageBoxOverlay');
-            const messageBoxContent = document.getElementById('messageBoxContent');
-            const messageBoxClose = document.getElementById('messageBoxClose');
-
-            // --- Search Functionality ---
+            
+            // --- Search Functionality (Only filters music cards) ---
             const filterMusic = () => {
                 const searchTerm = searchInput.value.toLowerCase();
-                const allCards = document.querySelectorAll('.music-card');
+                // Select only elements that are songs
+                const allMusicCards = document.querySelectorAll('.music-card[data-type="song"]'); 
 
-                allCards.forEach(card => {
+                allMusicCards.forEach(card => {
                     const songTitle = card.dataset.songTitle.toLowerCase();
                     
                     if (songTitle.includes(searchTerm)) {
@@ -365,50 +385,17 @@
             // Attach the search event listener
             searchInput.addEventListener('input', filterMusic);
 
-            // --- Play/Download Message Box Functionality ---
-
-            // Function to show the custom message box
-            const showMessageBox = (title, content) => {
-                document.getElementById('messageBoxTitle').textContent = title;
-                messageBoxContent.innerHTML = content;
-                messageBoxOverlay.style.display = 'flex';
-            };
-
-            // Function to hide the custom message box
-            const hideMessageBox = () => {
-                messageBoxOverlay.style.display = 'none';
-            };
-
-            // Event listener for the close button
-            messageBoxClose.addEventListener('click', hideMessageBox);
-            
-            // Event delegation for control buttons
+            // --- Control Button Feedback (No more error message) ---
             musicGrid.addEventListener('click', (event) => {
                 const target = event.target.closest('.control-button');
                 
                 if (target) {
                     const action = target.dataset.action;
                     const songTitle = target.dataset.songTitle;
-                    const fileName = target.dataset.fileName;
 
-                    if (action === 'play') {
-                        const content = `
-                            <p><strong>${songTitle}</strong> is now simulating playback.</p>
-                            <p style="color: #dc3545; font-size: 0.9em;">
-                                (Actual file: <code>${fileName}</code> cannot be played as local files are inaccessible.)
-                            </p>
-                        `;
-                        showMessageBox('Now Playing', content);
-                    } else if (action === 'download') {
-                        const content = `
-                            <p>You have successfully simulated the download of:</p>
-                            <p><strong>${songTitle}</strong> (File: <code>${fileName}</code>)</p>
-                            <p style="color: #1e88e5; font-size: 0.9em;">
-                                (In a real app, this would initiate the download of <code>${fileName}</code>.)
-                            </p>
-                        `;
-                        showMessageBox('Download Initiated', content);
-                    }
+                    // Console log for debug, but no message box displayed to user
+                    console.log(`Action: ${action} triggered for song: ${songTitle}`);
+                    // The CSS active state handles the visual feedback (scale down)
                 }
             });
         });
