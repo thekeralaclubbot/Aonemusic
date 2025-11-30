@@ -194,31 +194,63 @@ function renderMusicGrid() {
   songs.forEach(song => grid.appendChild(createMusicCard(song)));
 }
 
-/* PLAY SONG */
-let isPaused = false;
+// --- VITAL CHANGES FOR AUTO-PLAY NEXT SONG ---
 
+let isPaused = false;
+// 1. Track the index of the currently playing song in the 'songs' array
+let currentSongIndex = -1; 
+
+const audioPlayer = document.getElementById("audioPlayer");
+
+/**
+ * Plays a song by file and title, and updates the currentSongIndex.
+ */
 function playSong(file, title) {
-  const audio = document.getElementById("audioPlayer");
-  audio.src = file;
-  audio.play();
+  audioPlayer.src = file;
+  audioPlayer.play();
 
   document.getElementById("npTitle").textContent = title;
   document.getElementById("nowPlayingBar").classList.add("visible");
 
   isPaused = false;
   document.getElementById("pauseBtn").innerHTML = "⏸";
+
+  // 2. Find the index of the song that was just played and store it
+  const index = songs.findIndex(song => song.audioFile === file);
+  if (index !== -1) {
+    currentSongIndex = index;
+  }
 }
+
+/**
+ * Logic to play the next song in the playlist, looping back to the start.
+ */
+function playNextSong() {
+  if (currentSongIndex === -1) return; 
+
+  // Calculate the index of the next song using modulo to loop
+  const nextIndex = (currentSongIndex + 1) % songs.length;
+  const nextSong = songs[nextIndex];
+
+  if (nextSong) {
+    playSong(nextSong.audioFile, nextSong.title);
+  }
+}
+
+// 3. Attach event listener: when the audio finishes playing, call playNextSong
+audioPlayer.addEventListener('ended', playNextSong);
+
+// --- END OF AUTO-PLAY CHANGES ---
+
 
 /* PAUSE / RESUME */
 document.getElementById("pauseBtn").onclick = () => {
-  const audio = document.getElementById("audioPlayer");
-
   if (isPaused) {
-    audio.play();
+    audioPlayer.play();
     document.getElementById("pauseBtn").innerHTML = "⏸";
     isPaused = false;
   } else {
-    audio.pause();
+    audioPlayer.pause();
     document.getElementById("pauseBtn").innerHTML = "▶";
     isPaused = true;
   }
@@ -226,10 +258,10 @@ document.getElementById("pauseBtn").onclick = () => {
 
 /* STOP */
 document.getElementById("stopBtn").onclick = () => {
-  const audio = document.getElementById("audioPlayer");
-  audio.pause();
-  audio.currentTime = 0;
+  audioPlayer.pause();
+  audioPlayer.currentTime = 0;
   document.getElementById("nowPlayingBar").classList.remove("visible");
+  currentSongIndex = -1; // Reset index when stopped
 };
 
 /* ACTIONS */
@@ -240,7 +272,9 @@ document.addEventListener("click", (e) => {
   const file = btn.dataset.audio;
   const title = btn.dataset.title;
 
-  if (btn.classList.contains("play-button")) playSong(file, title);
+  if (btn.classList.contains("play-button")) {
+    playSong(file, title); 
+  }
 
   if (btn.classList.contains("download-button")) {
     const a = document.createElement("a");
