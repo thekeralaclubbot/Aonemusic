@@ -398,24 +398,23 @@
     </main>
 
     <script>
-        /* JavaScript from script.js */
+        /* JavaScript for Player Functionality and Notification Update */
 
-        /* SONG LIST */
+        /* SONG LIST (Updated with common asset paths) */
         const songs = [
             // IMPORTANT: Paths must be correct relative to where you save this HTML file
-            // **NOTE:** You must have these files (e.g., Ilakozhiye.jpg, Ilakozhiye.mp3) in the same directory or adjust the paths.
-            { title: "Ilakozhiye", coverFile: "Ilakozhiye.jpg", audioFile: "Ilakozhiye.mp3" },
-            { title: "Nera", coverFile: "nera.jpg", audioFile: "Nera.mp3" },
-            { title: "Shariya", coverFile: "shariya.jpg", audioFile: "Shariya.mp3" },
-            { title: "Hope Song", coverFile: "hope.jpg", audioFile: "hope_song.mp3" },
-            { title: "Jaalakaari", coverFile: "jaalakaari.jpg", audioFile: "jaalakaari.mp3" },
-            { title: "Kaadhal Ponmaan", coverFile: "kaadhal_ponmaan.jpg", audioFile: "kaadhal_ponmaan.mp3" },
-            { title: "Kannukulla", coverFile: "kannukulla.jpg", audioFile: "kannukulla.mp3" },
-            { title: "Kozhipunk", coverFile: "kozhipunk.jpg", audioFile: "kozhipunk.mp3" },
-            { title: "Singari", coverFile: "singari.jpg", audioFile: "singari.mp3" },
-            { title: "Thani Lokah Murakkaari", coverFile: "thani-lokah-murakkaari.jpg", audioFile: "thani-lokah-murakkaari.mp3" },
-            { title: "Oorum Blood", coverFile: "oorum-blood.jpg", audioFile: "oorum-blood.m4a" },
-            { title: "Munthirichar", coverFile: "mhr.jpg", audioFile: "mhr_munthirichar.mp3" }
+            { title: "Ilakozhiye", coverFile: "assets/covers/Ilakozhiye.jpg", audioFile: "assets/audio/Ilakozhiye.mp3" },
+            { title: "Nera", coverFile: "assets/covers/nera.jpg", audioFile: "assets/audio/Nera.mp3" },
+            { title: "Shariya", coverFile: "assets/covers/shariya.jpg", audioFile: "assets/audio/Shariya.mp3" },
+            { title: "Hope Song", coverFile: "assets/covers/hope.jpg", audioFile: "assets/audio/hope_song.mp3" },
+            { title: "Jaalakaari", coverFile: "assets/covers/jaalakaari.jpg", audioFile: "assets/audio/jaalakaari.mp3" },
+            { title: "Kaadhal Ponmaan", coverFile: "assets/covers/kaadhal_ponmaan.jpg", audioFile: "assets/audio/kaadhal_ponmaan.mp3" },
+            { title: "Kannukulla", coverFile: "assets/covers/kannukulla.jpg", audioFile: "assets/audio/kannukulla.mp3" },
+            { title: "Kozhipunk", coverFile: "assets/covers/kozhipunk.jpg", audioFile: "assets/audio/kozhipunk.mp3" },
+            { title: "Singari", coverFile: "assets/covers/singari.jpg", audioFile: "assets/audio/singari.mp3" },
+            { title: "Thani Lokah Murakkaari", coverFile: "assets/covers/thani-lokah-murakkaari.jpg", audioFile: "assets/audio/thani-lokah-murakkaari.mp3" },
+            { title: "Oorum Blood", coverFile: "assets/covers/oorum-blood.jpg", audioFile: "assets/audio/oorum-blood.m4a" },
+            { title: "Munthirichar", coverFile: "assets/covers/mhr.jpg", audioFile: "assets/audio/mhr_munthirichar.mp3" }
         ];
 
         /* DOM Elements */
@@ -435,8 +434,6 @@
         let currentSongIndex = -1; // -1 means no song is currently loaded
         let isPlaying = false;
         let notificationInstance = null; // To store the current notification object
-        
-        // **New variable for notification update interval**
         let notificationIntervalId = null; 
 
         /* --- Utility Functions --- */
@@ -448,7 +445,7 @@
             return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
         }
 
-        /* --- Notification Functions (New) --- */
+        /* --- Notification Functions (Updated) --- */
 
         // Request permission to send notifications
         function requestNotificationPermission() {
@@ -475,8 +472,7 @@
 
         // Create/Update the persistent notification
         function updatePlaybackNotification(song) {
-            closeNotification(); // Close the previous notification
-
+            // Only proceed if permission is granted
             if (Notification.permission !== "granted") {
                 return; 
             }
@@ -484,37 +480,65 @@
             const updateNotification = () => {
                 const currentTime = formatTime(audio.currentTime);
                 const duration = formatTime(audio.duration || 0);
+                
+                // This is the main title of the notification (Song Name + Status)
+                const titleText = isPlaying ? `▶ Playing: ${song.title}` : `⏸ Paused: ${song.title}`;
 
                 const options = {
-                    body: isPlaying 
-                        ? `Playing: ${song.title} (${currentTime} / ${duration})`
-                        : `Paused: ${song.title} (${currentTime} / ${duration})`,
+                    // Song time in the main body
+                    body: `Time: ${currentTime} / ${duration}`, 
+                    // Use the song cover as the icon
                     icon: song.coverFile, 
-                    // Set requireInteraction to true for a persistent notification on mobile/desktop
-                    requireInteraction: true, 
-                    tag: 'music-player-playback' // Use a tag to manage updates
+                    tag: 'music-player-playback', 
+                    // Add Action Buttons (Previous and Next)
+                    actions: [
+                        {
+                            action: 'prev',
+                            title: 'Previous',
+                            icon: 'assets/icons/prev_icon.png' // **UPDATE PATH TO YOUR ICON**
+                        },
+                        {
+                            action: 'next',
+                            title: 'Next Song',
+                            icon: 'assets/icons/next_icon.png' // **UPDATE PATH TO YOUR ICON**
+                        }
+                    ],
                 };
                 
-                // Close the old notification before creating a new one with the same tag
-                if (notificationInstance) {
-                    notificationInstance.close();
-                }
+                // Close the old notification before creating a new one
+                closeNotification(); 
 
-                notificationInstance = new Notification("MelodyStream Player", options);
+                notificationInstance = new Notification(titleText, options);
 
-                // Add click listener (optional)
+                // --- Handling Button Clicks via 'action' ---
+                notificationInstance.onactionclick = function(event) {
+                    if (event.action === 'next') {
+                        playNext();
+                    } else if (event.action === 'prev') {
+                        playPrev();
+                    }
+                    // Optional: Focus the window when an action is taken
+                    window.focus(); 
+                };
+
+                // Add a click listener for the main body
                 notificationInstance.onclick = function(event) {
-                    event.preventDefault(); // Prevents the browser from focusing the tab
-                    window.focus(); // Focus the window when the notification is clicked
+                    event.preventDefault(); 
+                    window.focus(); 
                 };
             };
             
             // Initial update
             updateNotification();
 
-            // Set up interval to update the time
-            if (isPlaying) {
-                notificationIntervalId = setInterval(updateNotification, 1000); // Update every second
+            // Set up interval to update the time display in the notification
+            if (isPlaying && !notificationIntervalId) {
+                notificationIntervalId = setInterval(updateNotification, 5000); // Update every 5 seconds
+            }
+            if (!isPlaying && notificationIntervalId) {
+                clearInterval(notificationIntervalId); // Stop interval if paused
+                notificationIntervalId = null;
+                updateNotification(); // One final update to show 'Paused' status
             }
         }
 
@@ -534,7 +558,6 @@
             
             // Update Download Link
             downloadLink.href = song.audioFile;
-            // Use the correct file extension for download
             const fileExtension = song.audioFile.split('.').pop(); 
             downloadLink.setAttribute('download', `${song.title}.${fileExtension}`); 
 
@@ -563,7 +586,14 @@
 
         // Forces the song to play
         function playSong() {
-            audio.play();
+            // Need to wrap in a promise catch for autoplay limitations
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("Autoplay prevented:", error);
+                    // User might need to click the main play button first.
+                });
+            }
         }
 
         // Forces the song to pause
@@ -663,14 +693,12 @@
             renderSongList(filteredSongs);
         }
 
-        /* --- Animation Toggle Function (New) --- */
+        /* --- Animation Toggle Function --- */
         function toggleAnimation(is_playing) {
             if (is_playing) {
                 playerCoverEl.classList.add('animate');
             } else {
                 playerCoverEl.classList.remove('animate');
-                // Optional: Stop the animation at the current rotation instead of resetting
-                // playerCoverEl.style.transform = getComputedStyle(playerCoverEl).transform;
             }
         }
 
@@ -686,22 +714,20 @@
         audio.addEventListener('loadedmetadata', () => {
             progressBar.max = audio.duration;
             durationEl.textContent = formatTime(audio.duration);
+            if (currentSongIndex !== -1) {
+                 updatePlaybackNotification(songs[currentSongIndex]);
+            }
         });
 
         audio.addEventListener('timeupdate', () => {
             progressBar.value = audio.currentTime;
             currentTimeEl.textContent = formatTime(audio.currentTime);
-            // Check if notification is active and update it
-            if (notificationIntervalId && isPlaying) {
-                 // For performance, we don't call updateNotification on every timeupdate, 
-                 // but rely on the interval set in the 'play' event.
-            }
         });
 
         audio.addEventListener('ended', () => {
-            closeNotification(); // Song ended, close the notification
-            playNext(); 
-        }); // Play next song automatically
+            closeNotification(); 
+            playNext(); // Autoplay next song
+        }); 
 
         audio.addEventListener('play', () => {
             isPlaying = true;
@@ -744,7 +770,7 @@
             // 2. Request Notification Permission
             requestNotificationPermission();
         });
-        
+
         // Ensure notification is closed if the browser tab is closed/page is left
         window.addEventListener('beforeunload', closeNotification);
     </script>
