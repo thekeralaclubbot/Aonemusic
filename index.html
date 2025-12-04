@@ -1,313 +1,618 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Node Music</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MelodyStream Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="icon" type="logo/jpg" href="logo.jpg"> 
+    
+    <style>
+        /* CSS from style.css */
+        
+        /* Custom Fonts and Reset */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-<style>
-body{
-  font-family:'Poppins',sans-serif;margin:0;padding:0;
-  background:#f4f7fa;padding-bottom:70px;color:#333;
-}
+        :root {
+            --primary-color: #1DB954; /* Spotify Green */
+            --background-color: #121212; /* Dark background */
+            --card-color: #181818;
+            --text-color: #FFFFFF;
+            --secondary-text-color: #B3B3B3;
+            --hover-color: #282828;
+        }
 
-/* HEADER */
-.app-header{
-  background:#1e88e5;color:#fff;padding:15px 20px;
-  display:flex;flex-direction:column;gap:10px;
-  position:sticky;top:0;z-index:10;
-  border-bottom-left-radius:15px;border-bottom-right-radius:15px;
-  box-shadow:0 4px 6px rgba(0,0,0,.1)
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-/* 📌 FIXED FULL LOGO VISIBLE */
-.logo-img{
-  width:70px;
-  height:70px;
-  object-fit:contain;     /* FULL LOGO SHOW */
-  background:white;
-  border-radius:12px;
-  padding:5px;
-  margin-right:12px;
-}
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-/* SEARCH BAR */
-.search-bar-container{
-  display:flex;border:1px solid #fff;background:#fff;
-  border-radius:20px;overflow:hidden
-}
-.search-input{
-  flex-grow:1;padding:8px 15px;border:none;outline:none
-}
-.search-button{
-  background:#ffb300;color:#fff;border:none;padding:8px 15px;cursor:pointer
-}
+        /* --- Header & Logo --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--card-color);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
 
-/* ADS */
-.ad-section{padding:20px}
-.ad-banner{
-  width:100%;
-  max-width:100%;
-  height:150px;
-  border-radius:12px;
-  background-size:cover;
-  background-position:center;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.4em;color:#fff;font-weight:700;
-  overflow:hidden;
-}
+        .logo {
+            display: flex;
+            align-items: center;
+        }
 
-/* MUSIC GRID */
-.content-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;padding:20px
-}
-.music-card{
-  background:#fff;border-radius:10px;padding:15px;
-  box-shadow:0 4px 8px rgba(0,0,0,.1)
-}
-.cover-art img{
-  width:100%;border-radius:10px;object-fit:cover;height:180px
-}
-.card-controls{
-  margin-top:10px;display:flex;align-items:center;gap:10px
-}
-.control-button{
-  width:36px;height:36px;border-radius:50%;
-  border:none;cursor:pointer;font-size:1.2em;
-  display:flex;align-items:center;justify-content:center
-}
-.play-button{background:#ffb300;color:#fff}
-.download-button{background:#28a745;color:#fff}
-.song-title{flex-grow:1;font-weight:600}
+        .logo i {
+            color: var(--primary-color);
+            font-size: 2em;
+            margin-right: 10px;
+        }
 
-/* NOW PLAYING BAR */
-.now-playing-bar{
-  position:fixed;bottom:0;width:100%;height:60px;
-  background:#333;color:#fff;display:flex;align-items:center;
-  padding:0 20px;transform:translateY(100%);
-  transition:transform .3s
-}
-.now-playing-bar.visible{transform:translateY(0)}
-.np-cover{
-  width:40px;height:40px;background:#ffb300;margin-right:10px;
-  border-radius:5px;display:flex;align-items:center;justify-content:center
-}
+        .logo h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+        }
 
-/* Pause Button */
-.pause-btn{
-  background:#ffb300;
-  color:#fff;
-  border:none;
-  border-radius:50%;
-  width:35px;height:35px;
-  font-size:1.3em;
-  margin-left:10px;
-}
-</style>
+        /* --- Search Bar --- */
+        .search-container {
+            position: relative;
+            width: 300px;
+        }
+
+        #search-bar {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: none;
+            border-radius: 50px;
+            background-color: var(--hover-color);
+            color: var(--text-color);
+            font-size: 1em;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+
+        #search-bar::placeholder {
+            color: var(--secondary-text-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-text-color);
+        }
+
+        /* --- Main Layout --- */
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- Song List --- */
+        .song-list-container {
+            flex: 1;
+            background-color: var(--card-color);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .song-list-container h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-bottom: 2px solid var(--hover-color);
+            padding-bottom: 10px;
+        }
+
+        .song-list {
+            list-style: none;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 5px; /* Space for scrollbar */
+        }
+
+        /* Scrollbar Style */
+        .song-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .song-list::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+        }
+        .song-list::-webkit-scrollbar-track {
+            background: var(--hover-color);
+            border-radius: 10px;
+        }
+
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .song-item:hover {
+            background-color: var(--hover-color);
+        }
+
+        .song-item.active {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            font-weight: 600;
+        }
+        .song-item.active .song-info span {
+            color: var(--background-color);
+        }
+
+
+        .song-cover-small {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .song-info {
+            flex-grow: 1;
+        }
+
+        .song-info strong {
+            display: block;
+            font-size: 1.1em;
+        }
+
+        .song-info span {
+            color: var(--secondary-text-color);
+            font-size: 0.85em;
+        }
+
+        .play-icon {
+            font-size: 1.2em;
+            color: var(--primary-color);
+        }
+        .song-item.active .play-icon {
+            color: var(--background-color);
+        }
+
+        /* --- Current Player --- */
+        .current-player-container {
+            width: 350px;
+            flex-shrink: 0;
+        }
+
+        .player-card {
+            background-color: var(--card-color);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 20px; /* Stick it to the top */
+        }
+
+        .player-cover {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        .player-title {
+            font-size: 1.4em;
+            margin-bottom: 25px;
+            min-height: 40px;
+        }
+
+        /* Player Controls */
+        .controls button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.8em;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.1s;
+            padding: 5px;
+        }
+
+        #play-pause-btn {
+            font-size: 2.5em;
+            color: var(--primary-color);
+        }
+
+        .controls button:hover {
+            color: var(--primary-color);
+        }
+        .controls button:active {
+            transform: scale(0.95);
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            display: flex;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--hover-color);
+            border-radius: 5px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .time {
+            font-size: 0.9em;
+            color: var(--secondary-text-color);
+            width: 35px;
+            text-align: center;
+        }
+
+        /* Download Button */
+        .download-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-top: 25px;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .download-btn:hover {
+            background-color: #1ed760; /* Slightly lighter green */
+        }
+
+        .download-btn i {
+            margin-right: 5px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 800px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .current-player-container {
+                width: 100%;
+                order: -1; /* Move player above the list on mobile */
+            }
+
+            .header {
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+            .search-container {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<header class="app-header">
-  <div style="display:flex;align-items:center;">
-    <img src="logo.jpg" class="logo-img" alt="Logo">
-    <span class="app-title" style="font-size:1.4em;font-weight:700;">Node Music</span>
-  </div>
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-headphones-alt"></i>
+            <h1>MelodyStream</h1>
+        </div>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search songs..." onkeyup="filterSongs()">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+    </header>
 
-  <div class="search-bar-container">
-    <input id="searchInput" class="search-input" placeholder="Search songs...">
-    <button class="search-button">🔍</button>
-  </div>
-</header>
+    <main class="container">
+        <section class="song-list-container">
+            <h2>Track List</h2>
+            <ul id="song-list" class="song-list">
+                </ul>
+        </section>
 
-<section class="ad-section">
-  <div id="adCarouselContainer" class="ad-banner">
-    <div id="adText"></div>
-  </div>
-</section>
+        <section class="current-player-container">
+            <div class="player-card">
+                <img id="player-cover" src="assets/covers/default.jpg" alt="Song Cover" class="player-cover">
+                <h3 id="player-title" class="player-title">Select a song to play...</h3>
+                
+                <div class="controls">
+                    <button id="prev-btn" title="Previous"><i class="fas fa-backward"></i></button>
+                    <button id="play-pause-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
+                    <button id="next-btn" title="Next"><i class="fas fa-forward"></i></button>
+                </div>
+                
+                <div class="progress-bar-container">
+                    <span id="current-time" class="time">0:00</span>
+                    <input type="range" id="progress-bar" min="0" max="100" value="0" class="progress-bar">
+                    <span id="duration" class="time">0:00</span>
+                </div>
 
-<main id="musicGrid" class="content-grid"></main>
+                <audio id="audio-element"></audio>
 
-<div id="nowPlayingBar" class="now-playing-bar">
-  <div class="np-cover">🎵</div>
-  <div id="npTitle"></div>
+                <a id="download-link" href="#" download class="download-btn" title="Download Song">
+                    <i class="fas fa-download"></i> Download
+                </a>
 
-  <button id="pauseBtn" class="pause-btn">⏸</button>
+            </div>
+        </section>
+    </main>
 
-  <button id="stopBtn"
-    style="margin-left:10px;background:#dc3545;color:white;border:none;border-radius:50%;
-    width:35px;height:35px;font-size:1.3em">⏹</button>
-</div>
+    <script>
+        /* JavaScript from script.js */
 
-<audio id="audioPlayer"></audio>
+        /* SONG LIST */
+        const songs = [
+            // IMPORTANT: Paths must be correct relative to where you save this HTML file
+            { title: "Ilakozhiye", coverFile: "assets/covers/Ilakozhiye.jpg", audioFile: "assets/audio/Ilakozhiye.mp3" },
+            { title: "Nera", coverFile: "assets/covers/nera.jpg", audioFile: "assets/audio/Nera.mp3" },
+            { title: "Shariya", coverFile: "assets/covers/shariya.jpg", audioFile: "assets/audio/Shariya.mp3" },
+            { title: "Hope Song", coverFile: "assets/covers/hope.jpg", audioFile: "assets/audio/hope_song.mp3" },
+            { title: "Jaalakaari", coverFile: "assets/covers/jaalakaari.jpg", audioFile: "assets/audio/jaalakaari.mp3" },
+            { title: "Kaadhal Ponmaan", coverFile: "assets/covers/kaadhal_ponmaan.jpg", audioFile: "assets/audio/kaadhal_ponmaan.mp3" },
+            { title: "Kannukulla", coverFile: "assets/covers/kannukulla.jpg", audioFile: "assets/audio/kannukulla.mp3" },
+            { title: "Kozhipunk", coverFile: "assets/covers/kozhipunk.jpg", audioFile: "assets/audio/kozhipunk.mp3" },
+            { title: "Singari", coverFile: "assets/covers/singari.jpg", audioFile: "assets/audio/singari.mp3" },
+            { title: "Thani Lokah Murakkaari", coverFile: "assets/covers/thani-lokah-murakkaari.jpg", audioFile: "assets/audio/thani-lokah-murakkaari.mp3" },
+            { title: "Oorum Blood", coverFile: "assets/covers/oorum-blood.jpg", audioFile: "assets/audio/oorum-blood.m4a" },
+            { title: "Munthirichar", coverFile: "assets/covers/mhr.jpg", audioFile: "assets/audio/mhr_munthirichar.mp3" }
+        ];
 
-<script>
+        /* DOM Elements */
+        const songListEl = document.getElementById('song-list');
+        const audio = document.getElementById('audio-element');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+        const playerTitleEl = document.getElementById('player-title');
+        const playerCoverEl = document.getElementById('player-cover');
+        const downloadLink = document.getElementById('download-link');
 
-/* SONG LIST */
-const songs = [
-  { title: "Ilakozhiye", coverFile: "Ilakozhiye.jpg", audioFile: "Ilakozhiye.mp3" },
-  { title: "Nera", coverFile: "nera.jpg", audioFile: "Nera.mp3" },
-  { title: "Shariya", coverFile: "shariya.jpg", audioFile: "Shariya.mp3" },
-  { title: "Hope Song", coverFile: "hope.jpg", audioFile: "hope_song.mp3" },
-  { title: "Jaalakaari", coverFile: "jaalakaari.jpg", audioFile: "jaalakaari.mp3" },
-  { title: "Kaadhal Ponmaan", coverFile: "kaadhal_ponmaan.jpg", audioFile: "kaadhal_ponmaan.mp3" },
-  { title: "Kannukulla", coverFile: "kannukulla.jpg", audioFile: "kannukulla.mp3" },
-  { title: "Kozhipunk", coverFile: "kozhipunk.jpg", audioFile: "kozhipunk.mp3" },
-  { title: "Singari", coverFile: "singari.jpg", audioFile: "singari.mp3" },
-  { title: "Thani Lokah Murakkaari", coverFile: "thani-lokah-murakkaari.jpg", audioFile: "thani-lokah-murakkaari.mp3" },
-  { title: "Oorum Blood", coverFile: "oorum-blood.jpg", audioFile: "oorum-blood.m4a" },
-  { title: "Munthirichar", coverFile: "mhr.jpg", audioFile: "mhr_munthirichar.mp3" }
-];
+        /* State Variables */
+        let currentSongIndex = -1; // -1 means no song is currently loaded
+        let isPlaying = false;
 
-/* ADS */
-const ads = [
-  { title: "", file: "ad4.jpg" },
-  { title: "", file: "ad2.jpg" },
-  { title: "", file: "ad3.jpg" }
-];
-let currentAd = 0;
+        /* --- Utility Functions --- */
 
-/* CREATE MUSIC CARD */
-const createMusicCard = (song) => {
-  const card = document.createElement("div");
-  card.className = "music-card";
+        // Format time in seconds to mm:ss format
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
 
-  card.innerHTML = `
-    <div class="cover-art">
-      <img src="${song.coverFile}" onerror="this.src='https://placehold.co/200x200?text=No+Image'">
-    </div>
+        /* --- Main Player Functions --- */
 
-    <div class="card-controls">
-      <button class="control-button play-button" data-audio="${song.audioFile}" data-title="${song.title}">▶</button>
-      <button class="control-button download-button" data-audio="${song.audioFile}">⬇</button>
-      <p class="song-title">${song.title}</p>
-    </div>
-  `;
-  return card;
-};
+        // Loads the specified song into the player
+        function loadSong(index) {
+            if (index < 0 || index >= songs.length) return; // Safety check
 
-/* RENDER GRID */
-function renderMusicGrid() {
-  const grid = document.getElementById("musicGrid");
-  songs.forEach(song => grid.appendChild(createMusicCard(song)));
-}
+            currentSongIndex = index;
+            const song = songs[currentSongIndex];
 
-// --- VITAL CHANGES FOR AUTO-PLAY NEXT SONG ---
+            audio.src = song.audioFile;
+            playerTitleEl.textContent = song.title;
+            playerCoverEl.src = song.coverFile;
+            
+            // Update Download Link
+            downloadLink.href = song.audioFile;
+            // Use the correct file extension for download
+            const fileExtension = song.audioFile.split('.').pop(); 
+            downloadLink.setAttribute('download', `${song.title}.${fileExtension}`); 
 
-let isPaused = false;
-// 1. Track the index of the currently playing song in the 'songs' array
-let currentSongIndex = -1; 
+            // Update active state in song list UI
+            updateSongListUI(currentSongIndex);
+        }
 
-const audioPlayer = document.getElementById("audioPlayer");
+        // Toggles the play/pause state
+        function togglePlay() {
+            if (currentSongIndex === -1) {
+                // If no song is loaded, load the first one and play
+                loadSong(0);
+                playSong();
+                return;
+            }
+            
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play();
+            }
+        }
 
-/**
- * Plays a song by file and title, and updates the currentSongIndex.
- */
-function playSong(file, title) {
-  audioPlayer.src = file;
-  audioPlayer.play();
+        // Forces the song to play
+        function playSong() {
+            audio.play();
+        }
 
-  document.getElementById("npTitle").textContent = title;
-  document.getElementById("nowPlayingBar").classList.add("visible");
+        // Forces the song to pause
+        function pauseSong() {
+            audio.pause();
+        }
 
-  isPaused = false;
-  document.getElementById("pauseBtn").innerHTML = "⏸";
+        // Play the next song in the list
+        function playNext() {
+            const nextIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(nextIndex);
+            playSong();
+        }
 
-  // 2. Find the index of the song that was just played and store it
-  const index = songs.findIndex(song => song.audioFile === file);
-  if (index !== -1) {
-    currentSongIndex = index;
-  }
-}
+        // Play the previous song in the list
+        function playPrev() {
+            // Loop back to the end if at the beginning
+            let prevIndex = currentSongIndex - 1;
+            if (prevIndex < 0) {
+                prevIndex = songs.length - 1;
+            }
+            loadSong(prevIndex);
+            playSong();
+        }
 
-/**
- * Logic to play the next song in the playlist, looping back to the start.
- */
-function playNextSong() {
-  if (currentSongIndex === -1) return; 
+        /* --- UI Functions --- */
 
-  // Calculate the index of the next song using modulo to loop
-  const nextIndex = (currentSongIndex + 1) % songs.length;
-  const nextSong = songs[nextIndex];
+        // Populates the song list on the webpage
+        function renderSongList(songArray) {
+            songListEl.innerHTML = ''; // Clear existing list
+            
+            songArray.forEach((song) => {
+                // Find the original index for the click handler, even if the list is filtered
+                const originalIndex = songs.findIndex(s => s.title === song.title);
 
-  if (nextSong) {
-    playSong(nextSong.audioFile, nextSong.title);
-  }
-}
+                const listItem = document.createElement('li');
+                listItem.classList.add('song-item');
+                listItem.setAttribute('data-index', originalIndex);
+                listItem.innerHTML = `
+                    <img src="${song.coverFile}" alt="Cover" class="song-cover-small">
+                    <div class="song-info">
+                        <strong>${song.title}</strong>
+                        <span>Click to Play</span>
+                    </div>
+                    <i class="fas fa-play play-icon"></i>
+                `;
+                
+                listItem.addEventListener('click', () => {
+                    const clickedIndex = parseInt(listItem.getAttribute('data-index'));
+                    if (clickedIndex === currentSongIndex && isPlaying) {
+                        pauseSong();
+                    } else if (clickedIndex === currentSongIndex && !isPlaying) {
+                        playSong();
+                    } else {
+                        loadSong(clickedIndex);
+                        playSong();
+                    }
+                });
 
-// 3. Attach event listener: when the audio finishes playing, call playNextSong
-audioPlayer.addEventListener('ended', playNextSong);
+                songListEl.appendChild(listItem);
+            });
 
-// --- END OF AUTO-PLAY CHANGES ---
+            // Re-apply active state after rendering
+            if (currentSongIndex !== -1) {
+                updateSongListUI(currentSongIndex);
+            }
+        }
+
+        // Updates the 'active' class on song list items
+        function updateSongListUI(activeIndex) {
+            document.querySelectorAll('.song-item').forEach((item) => {
+                const itemIndex = parseInt(item.getAttribute('data-index'));
+                const playIcon = item.querySelector('.play-icon');
+
+                item.classList.remove('active');
+                if (playIcon) {
+                    playIcon.className = 'fas fa-play play-icon'; // Default to Play icon
+                }
+
+                if (itemIndex === activeIndex) {
+                    item.classList.add('active');
+                    if (playIcon) {
+                         playIcon.className = isPlaying ? 'fas fa-pause play-icon' : 'fas fa-play play-icon';
+                    }
+                }
+            });
+        }
+
+        // Handles the song searching/filtering
+        function filterSongs() {
+            const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+            
+            const filteredSongs = songs.filter(song => 
+                song.title.toLowerCase().includes(searchTerm)
+            );
+
+            renderSongList(filteredSongs);
+        }
 
 
-/* PAUSE / RESUME */
-document.getElementById("pauseBtn").onclick = () => {
-  if (isPaused) {
-    audioPlayer.play();
-    document.getElementById("pauseBtn").innerHTML = "⏸";
-    isPaused = false;
-  } else {
-    audioPlayer.pause();
-    document.getElementById("pauseBtn").innerHTML = "▶";
-    isPaused = true;
-  }
-};
+        /* --- Event Listeners --- */
 
-/* STOP */
-document.getElementById("stopBtn").onclick = () => {
-  audioPlayer.pause();
-  audioPlayer.currentTime = 0;
-  document.getElementById("nowPlayingBar").classList.remove("visible");
-  currentSongIndex = -1; // Reset index when stopped
-};
+        // Player Controls
+        playPauseBtn.addEventListener('click', togglePlay);
+        nextBtn.addEventListener('click', playNext);
+        prevBtn.addEventListener('click', playPrev);
 
-/* ACTIONS */
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".control-button");
-  if (!btn) return;
+        // Audio Events
+        audio.addEventListener('loadedmetadata', () => {
+            progressBar.max = audio.duration;
+            durationEl.textContent = formatTime(audio.duration);
+        });
 
-  const file = btn.dataset.audio;
-  const title = btn.dataset.title;
+        audio.addEventListener('timeupdate', () => {
+            progressBar.value = audio.currentTime;
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+        });
 
-  if (btn.classList.contains("play-button")) {
-    playSong(file, title); 
-  }
+        audio.addEventListener('ended', playNext); // Play next song automatically
 
-  if (btn.classList.contains("download-button")) {
-    const a = document.createElement("a");
-    a.href = file;
-    a.download = file;
-    a.click();
-  }
-});
+        audio.addEventListener('play', () => {
+            isPlaying = true;
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            updateSongListUI(currentSongIndex);
+        });
 
-/* SEARCH */
-document.getElementById("searchInput").addEventListener("input", (e) => {
-  const term = e.target.value.toLowerCase();
-  document.querySelectorAll(".music-card").forEach(card => {
-    card.style.display = card.innerText.toLowerCase().includes(term) ? "block" : "none";
-  });
-});
+        audio.addEventListener('pause', () => {
+            isPlaying = false;
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            updateSongListUI(currentSongIndex);
+        });
 
-/* ROTATE ADS */
-function rotateAds() {
-  const ad = ads[currentAd];
-  document.getElementById("adCarouselContainer").style.backgroundImage = `url('${ad.file}')`;
-  document.getElementById("adText").textContent = ad.title;
-  currentAd = (currentAd + 1) % ads.length;
-}
-setInterval(rotateAds, 2500);
+        // Progress Bar interaction
+        progressBar.addEventListener('input', () => {
+            // This is for continuous scrubbing feedback before lift-off
+            currentTimeEl.textContent = formatTime(progressBar.value);
+        });
+        progressBar.addEventListener('change', () => {
+            audio.currentTime = progressBar.value;
+        });
 
-/* INIT */
-document.addEventListener("DOMContentLoaded", () => {
-  renderMusicGrid();
-  rotateAds();
-});
 
-</script>
-
+        /* --- Initialization --- */
+        // Render the full song list when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSongList(songs);
+        });
+    </script>
 </body>
-  </html>
+</html>
