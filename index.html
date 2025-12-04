@@ -220,6 +220,22 @@
             object-fit: cover;
         }
 
+        /* New CSS for Animation */
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .player-cover.animate {
+            border-radius: 50%; /* Make it circular for a record/CD look */
+            animation: spin 10s linear infinite;
+        }
+        /* End New CSS for Animation */
+
         .player-title {
             font-size: 1.4em;
             margin-bottom: 25px;
@@ -328,6 +344,9 @@
             .search-container {
                 width: 100%;
             }
+            .player-cover.animate {
+                animation: spin 6s linear infinite; /* Faster spin on mobile */
+            }
         }
     </style>
 </head>
@@ -384,6 +403,7 @@
         /* SONG LIST */
         const songs = [
             // IMPORTANT: Paths must be correct relative to where you save this HTML file
+            // **NOTE:** You must have these files (e.g., Ilakozhiye.jpg, Ilakozhiye.mp3) in the same directory or adjust the paths.
             { title: "Ilakozhiye", coverFile: "Ilakozhiye.jpg", audioFile: "Ilakozhiye.mp3" },
             { title: "Nera", coverFile: "nera.jpg", audioFile: "Nera.mp3" },
             { title: "Shariya", coverFile: "shariya.jpg", audioFile: "Shariya.mp3" },
@@ -414,6 +434,10 @@
         /* State Variables */
         let currentSongIndex = -1; // -1 means no song is currently loaded
         let isPlaying = false;
+        let notificationInstance = null; // To store the current notification object
+        
+        // **New variable for notification update interval**
+        let notificationIntervalId = null; 
 
         /* --- Utility Functions --- */
 
@@ -423,6 +447,77 @@
             const remainingSeconds = Math.floor(seconds % 60);
             return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
         }
+
+        /* --- Notification Functions (New) --- */
+
+        // Request permission to send notifications
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                console.log("This browser does not support desktop notification");
+                return;
+            }
+            if (Notification.permission === "default") {
+                Notification.requestPermission();
+            }
+        }
+
+        // Close and clear the current notification
+        function closeNotification() {
+            if (notificationInstance) {
+                notificationInstance.close();
+                notificationInstance = null;
+            }
+            if (notificationIntervalId) {
+                clearInterval(notificationIntervalId);
+                notificationIntervalId = null;
+            }
+        }
+
+        // Create/Update the persistent notification
+        function updatePlaybackNotification(song) {
+            closeNotification(); // Close the previous notification
+
+            if (Notification.permission !== "granted") {
+                return; 
+            }
+
+            const updateNotification = () => {
+                const currentTime = formatTime(audio.currentTime);
+                const duration = formatTime(audio.duration || 0);
+
+                const options = {
+                    body: isPlaying 
+                        ? `Playing: ${song.title} (${currentTime} / ${duration})`
+                        : `Paused: ${song.title} (${currentTime} / ${duration})`,
+                    icon: song.coverFile, 
+                    // Set requireInteraction to true for a persistent notification on mobile/desktop
+                    requireInteraction: true, 
+                    tag: 'music-player-playback' // Use a tag to manage updates
+                };
+                
+                // Close the old notification before creating a new one with the same tag
+                if (notificationInstance) {
+                    notificationInstance.close();
+                }
+
+                notificationInstance = new Notification("MelodyStream Player", options);
+
+                // Add click listener (optional)
+                notificationInstance.onclick = function(event) {
+                    event.preventDefault(); // Prevents the browser from focusing the tab
+                    window.focus(); // Focus the window when the notification is clicked
+                };
+            };
+            
+            // Initial update
+            updateNotification();
+
+            // Set up interval to update the time
+            if (isPlaying) {
+                notificationIntervalId = setInterval(updateNotification, 1000); // Update every second
+            }
+        }
+
 
         /* --- Main Player Functions --- */
 
@@ -445,6 +540,9 @@
 
             // Update active state in song list UI
             updateSongListUI(currentSongIndex);
+            
+            // Close old notification when loading a new song
+            closeNotification(); 
         }
 
         // Toggles the play/pause state
@@ -565,6 +663,17 @@
             renderSongList(filteredSongs);
         }
 
+        /* --- Animation Toggle Function (New) --- */
+        function toggleAnimation(is_playing) {
+            if (is_playing) {
+                playerCoverEl.classList.add('animate');
+            } else {
+                playerCoverEl.classList.remove('animate');
+                // Optional: Stop the animation at the current rotation instead of resetting
+                // playerCoverEl.style.transform = getComputedStyle(playerCoverEl).transform;
+            }
+        }
+
 
         /* --- Event Listeners --- */
 
@@ -582,25 +691,44 @@
         audio.addEventListener('timeupdate', () => {
             progressBar.value = audio.currentTime;
             currentTimeEl.textContent = formatTime(audio.currentTime);
+            // Check if notification is active and update it
+            if (notificationIntervalId && isPlaying) {
+                 // For performance, we don't call updateNotification on every timeupdate, 
+                 // but rely on the interval set in the 'play' event.
+            }
         });
 
-        audio.addEventListener('ended', playNext); // Play next song automatically
+        audio.addEventListener('ended', () => {
+            closeNotification(); // Song ended, close the notification
+            playNext(); 
+        }); // Play next song automatically
 
         audio.addEventListener('play', () => {
             isPlaying = true;
             playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
             updateSongListUI(currentSongIndex);
+            toggleAnimation(true); // Start animation
+            
+            // Start/Update notification
+            if (currentSongIndex !== -1) {
+                updatePlaybackNotification(songs[currentSongIndex]);
+            }
         });
 
         audio.addEventListener('pause', () => {
             isPlaying = false;
             playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
             updateSongListUI(currentSongIndex);
+            toggleAnimation(false); // Stop animation
+            
+            // Update notification to show 'Paused' status
+            if (currentSongIndex !== -1) {
+                updatePlaybackNotification(songs[currentSongIndex]);
+            }
         });
 
         // Progress Bar interaction
         progressBar.addEventListener('input', () => {
-            // This is for continuous scrubbing feedback before lift-off
             currentTimeEl.textContent = formatTime(progressBar.value);
         });
         progressBar.addEventListener('change', () => {
@@ -609,10 +737,16 @@
 
 
         /* --- Initialization --- */
-        // Render the full song list when the page loads
         document.addEventListener('DOMContentLoaded', () => {
+            // 1. Render the full song list when the page loads
             renderSongList(songs);
+            
+            // 2. Request Notification Permission
+            requestNotificationPermission();
         });
+        
+        // Ensure notification is closed if the browser tab is closed/page is left
+        window.addEventListener('beforeunload', closeNotification);
     </script>
 </body>
 </html>
